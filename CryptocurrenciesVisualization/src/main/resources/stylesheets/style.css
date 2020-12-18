@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .root {
     -fx-background-color: white;
     -fx-font-family: Lato, sans-serif;
@@ -69,6 +70,8 @@ input {
 }
 
 
+=======
+>>>>>>> master
 
 .list-view .scroll-bar:vertical .increment-arrow,
 .list-view .scroll-bar:vertical .decrement-arrow,
