@@ -5,7 +5,7 @@ public class Coin {
     private final String id;
     private final String name;
     private final String symbol;
-    private final String thumb;
+    private final String imageUrl;
     private int marketCapRank;
 
     private int score = -1;
@@ -13,11 +13,11 @@ public class Coin {
     private int marketCap = -1;
     private Double priceChangePercentage24h = null;
 
-    public Coin(String id, String name, String symbol, String thumb, int marketCapRank) {
+    public Coin(String id, String name, String symbol, String imageUrl, int marketCapRank) {
         this.id = id;
         this.name = name;
-        this.symbol = symbol;
-        this.thumb = thumb;
+        this.symbol = symbol.toUpperCase();
+        this.imageUrl = imageUrl;
         this.marketCapRank = marketCapRank;
     }
 
@@ -33,8 +33,8 @@ public class Coin {
         return symbol;
     }
 
-    public String getThumb() {
-        return thumb;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getMarketCapRank() {
@@ -49,9 +49,7 @@ public class Coin {
         return currentPrice;
     }
 
-    public int getMarketCap() {
-        return marketCap;
-    }
+    public int getMarketCap() { return marketCap; }
 
     public Double getPriceChangePercentage24h() {
         return priceChangePercentage24h;
@@ -61,9 +59,7 @@ public class Coin {
         this.score = score;
     }
 
-    public void setCurrentPrice(Double currentPrice) {
-        this.currentPrice = currentPrice;
-    }
+    public void setCurrentPrice(Double currentPrice) { this.currentPrice = currentPrice; }
 
     public void setMarketCap(int marketCap) {
         this.marketCap = marketCap;

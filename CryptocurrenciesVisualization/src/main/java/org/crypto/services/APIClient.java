@@ -1,6 +1,7 @@
 package org.crypto.services;
 
 import org.crypto.gui.objects.Coin;
+import org.crypto.gui.objects.TableData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -122,7 +123,7 @@ public class APIClient {
             Coin coin = new Coin(coinObj.getString("id"),
                     coinObj.getString("name"),
                     coinObj.getString("symbol"),
-                    coinObj.getString("thumb"),
+                    coinObj.getString("large"),
                     coinObj.getInt("market_cap_rank"));
 
             coin.setScore(coinObj.getInt("score"));
@@ -136,6 +137,7 @@ public class APIClient {
     /**
      * Zwraca listę najważniejszych kryptowalut
      *
+     * @param currency w jakiej walucie ma być cena
      * @return 7 elementowa lista obiektów Coin
      */
     public List<Coin> getTop(String currency) {
@@ -243,5 +245,38 @@ public class APIClient {
 
         return ret;
     }
+
+    public TableData getTableData(String id, String currency) {
+        String jsonString = "";
+
+        try {
+            URL url = new URL(sURL + "/coins/" + id + "?localization=false&ticker=false" +
+                    "&market_data=true" +
+                    "&community_data=true" +
+                    "&developer_data=true" +
+                    "&sparkline=false");
+
+            jsonString = read(connect(url));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject obj = new JSONObject(jsonString);
+        TableData tbl = new TableData(id);
+        JSONObject marketData = obj.getJSONObject("market_data");
+
+        tbl.setMarketCapRank(obj.getInt("market_cap_rank"));
+        tbl.setCurrentPrice(marketData.getJSONObject("current_price").getDouble(currency));
+        tbl.setMarketCap(marketData.getJSONObject("market_cap").getInt(currency));
+        tbl.setWebsite(obj.getJSONObject("links").getJSONArray("homepage").getString(0));
+        tbl.setTotalVolume(marketData.getJSONObject("total_volume").getLong(currency));
+        tbl.setHigh24h(marketData.getJSONObject("high_24h").getInt(currency));
+        tbl.setLow24h(marketData.getJSONObject("low_24h").getInt(currency));
+        tbl.setAth(marketData.getJSONObject("ath").getInt(currency));
+        tbl.setAtl(marketData.getJSONObject("atl").getInt(currency));
+
+        return tbl;
+    }
+
 
 }
