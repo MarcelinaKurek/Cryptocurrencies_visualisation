@@ -274,15 +274,41 @@ public class APIClient {
         TableData tbl = new TableData(id);
         JSONObject marketData = obj.getJSONObject("market_data");
 
-        tbl.setMarketCapRank(obj.getInt("market_cap_rank"));
-        tbl.setCurrentPrice(marketData.getJSONObject("current_price").getDouble(currency));
-        tbl.setMarketCap(marketData.getJSONObject("market_cap").getInt(currency));
+        if (obj.isNull("market_cap_rank")) tbl.setMarketCapRank(-1);
+        else tbl.setMarketCapRank(obj.getInt("market_cap_rank"));
+
+        if (marketData.getJSONObject("current_price").isEmpty()) tbl.setCurrentPrice(null);
+        else tbl.setCurrentPrice(marketData.getJSONObject("current_price").getDouble(currency));
+
+        if (marketData.getJSONObject("market_cap").isEmpty()) tbl.setMarketCap(-1);
+        else tbl.setMarketCap(marketData.getJSONObject("market_cap").getLong(currency));
+
+        if (marketData.getJSONObject("total_volume").isEmpty()) tbl.setTotalVolume(-1);
+        else tbl.setTotalVolume(marketData.getJSONObject("total_volume").getLong(currency));
+
+        JSONObject high = new JSONObject(marketData.getJSONObject("high_24h").toString().toLowerCase());
+        JSONObject low = new JSONObject(marketData.getJSONObject("low_24h").toString().toLowerCase());
+
+        if (marketData.isNull("high_24h") ||
+                high.isNull(currency)) {
+            tbl.setHigh24h(null);
+            tbl.setLow24h(null);
+        }
+        else {
+            tbl.setHigh24h(high.getDouble(currency));
+            tbl.setLow24h(low.getDouble(currency));
+        }
+
         tbl.setWebsite(obj.getJSONObject("links").getJSONArray("homepage").getString(0));
-        tbl.setTotalVolume(marketData.getJSONObject("total_volume").getLong(currency));
-        tbl.setHigh24h(marketData.getJSONObject("high_24h").getInt(currency));
-        tbl.setLow24h(marketData.getJSONObject("low_24h").getInt(currency));
-        tbl.setAth(marketData.getJSONObject("ath").getInt(currency));
-        tbl.setAtl(marketData.getJSONObject("atl").getInt(currency));
+
+        if (marketData.getJSONObject("ath").isEmpty()) {
+            tbl.setAth(null);
+            tbl.setAtl(null);
+        } else {
+            tbl.setAth(marketData.getJSONObject("ath").getDouble(currency));
+            tbl.setAtl(marketData.getJSONObject("atl").getDouble(currency));
+        }
+
         tbl.setImageLargeUrl(obj.getJSONObject("image").getString("large"));
         tbl.setImageSmallUrl(obj.getJSONObject("image").getString("thumb"));
 

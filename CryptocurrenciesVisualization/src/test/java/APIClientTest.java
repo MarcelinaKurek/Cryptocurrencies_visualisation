@@ -75,7 +75,7 @@ public class APIClientTest {
 
     @org.junit.Test
     public void testTableData() {
-        TableData bitcoinTableData = client.getTableData("bitcoin", "pln");
+        TableData bitcoinTableData = client.getTableData("bitcoin", "usd");
 
         System.out.println(bitcoinTableData);
     }
@@ -85,5 +85,12 @@ public class APIClientTest {
         List<String> li = client.getSupportedCurrencies();
 
         li.forEach(System.out::println);
+    }
+
+    @org.junit.Test
+    public void testObscureCoin() {
+        TableData tbl = client.getTableData("torcorp", "usd");
+
+        System.out.println(tbl);
     }
 }
