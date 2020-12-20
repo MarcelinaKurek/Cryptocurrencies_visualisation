@@ -1,10 +1,10 @@
 import org.crypto.gui.objects.Coin;
+import org.crypto.gui.objects.TableData;
 import org.crypto.services.APIClient;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class APIClientTest {
 
@@ -35,21 +35,55 @@ public class APIClientTest {
     public void testTrending() {
         List<Coin> trending = client.getTrending();
 
-        trending.forEach(coin -> System.out.println(coin.getName()));
+        trending.forEach(coin -> System.out.println(coin.getScore()));
     }
 
     @org.junit.Test
     public void testTop() {
         List<Coin> top = client.getTop("usd");
 
-        top.forEach(coin -> System.out.println("name = " + coin.getName() + ", price = " + coin.getCurrentPrice()));
+        top.forEach(coin -> System.out.println("name = " + coin.getName() + ", imageUrl = " + coin.getImageUrl()));
     }
 
-    // nie bangla url
     @org.junit.Test
     public void testOhlc() {
         Map<Date, List<Double>> map = client.getOHLC("bitcoin", "usd", 7);
 
         map.forEach((key, value) -> System.out.println("date = " + key + ", ohlc = " + value));
+    }
+
+    @org.junit.Test
+    public void testMarketChart() {
+        Map<Date, Double> map = client.getMarketChart("bitcoin", "usd", 20);
+
+        map.forEach((key, value) -> System.out.println("date = " + key + ", price = " + value));
+    }
+
+    @org.junit.Test
+    public void testUppercaseSymbol() {
+        List<Coin> top = client.getTop("usd");
+
+        top.forEach(coin -> System.out.println(coin.getSymbol()));
+    }
+
+    @org.junit.Test
+    public void testRoundedPrice() {
+        List<Coin> top = client.getTop("usd");
+
+        top.forEach(coin -> System.out.println(coin.getCurrentPrice()));
+    }
+
+    @org.junit.Test
+    public void testTableData() {
+        TableData bitcoinTableData = client.getTableData("bitcoin", "pln");
+
+        System.out.println(bitcoinTableData);
+    }
+
+    @org.junit.Test
+    public void testVsCurrencies() {
+        List<String> li = client.getSupportedCurrencies();
+
+        li.forEach(System.out::println);
     }
 }
