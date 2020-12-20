@@ -123,7 +123,7 @@ public class APIClient {
             Coin coin = new Coin(coinObj.getString("id"),
                     coinObj.getString("name"),
                     coinObj.getString("symbol"),
-                    coinObj.getString("large"),
+                    coinObj.getString("thumb"),
                     coinObj.getInt("market_cap_rank"));
 
             coin.setScore(coinObj.getInt("score"));

@@ -20,8 +20,6 @@ public class RankingTableView extends TableView<Coin> {
         rLogo.setCellFactory(param -> {
             //Set up the ImageView
             final ImageView imageview = new ImageView();
-            imageview.setFitHeight(40);
-            imageview.setFitWidth(40);
 
             //Set up the Table
             TableCell<Coin, String> cell = new TableCell<Coin, String>() {
@@ -36,7 +34,7 @@ public class RankingTableView extends TableView<Coin> {
             };
             return cell;
         });
-        rLogo.setCellValueFactory(new PropertyValueFactory<>("thumb"));
+        rLogo.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
 
         TableColumn<Coin, String> rCoin = new TableColumn<>("Coin");
         rCoin.setCellFactory(param -> {

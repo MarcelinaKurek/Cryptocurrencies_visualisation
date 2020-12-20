@@ -37,7 +37,7 @@ public class TrendingTableView extends TableView<Coin> {
             cell.setGraphic(imageview);
             return cell;
         });
-        logo.setCellValueFactory(new PropertyValueFactory<>("thumb"));
+        logo.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
 
         TableColumn<Coin, String> coin = new TableColumn<>("Coin");
         coin.setCellFactory(param -> {
