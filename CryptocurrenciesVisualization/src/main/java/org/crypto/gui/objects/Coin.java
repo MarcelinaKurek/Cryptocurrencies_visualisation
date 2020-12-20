@@ -70,4 +70,5 @@ public class Coin {
     public void setMarketCapRank(int marketCapRank) {
         this.marketCapRank = marketCapRank;
     }
+
 }
