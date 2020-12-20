@@ -8,7 +8,7 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
-public class CCurrencyListViewCell extends ListCell<CryptoCurrency> {
+public class CCurrencyListViewCell extends ListCell<Coin> {
 
     @FXML
     private GridPane gridPane;
@@ -22,7 +22,7 @@ public class CCurrencyListViewCell extends ListCell<CryptoCurrency> {
     private FXMLLoader mLLoader;
 
     @Override
-    protected void updateItem(CryptoCurrency cryptoCurrency, boolean empty) {
+    protected void updateItem(Coin cryptoCurrency, boolean empty) {
         super.updateItem(cryptoCurrency, empty);
 
         if(empty || cryptoCurrency == null) {
