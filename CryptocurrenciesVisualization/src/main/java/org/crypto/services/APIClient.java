@@ -156,10 +156,12 @@ public class APIClient {
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
+            String imageUrl = obj.getString("image").replace("large", "thumb");
+
             Coin coin = new Coin(obj.getString("id"),
                     obj.getString("name"),
                     obj.getString("symbol"),
-                    obj.getString("image"),
+                    imageUrl,
                     obj.getInt("market_cap_rank"));
 
             coin.setCurrentPrice(obj.getDouble("current_price"));
@@ -186,7 +188,7 @@ public class APIClient {
 
         try {
             URL url = new URL(sURL + "/coins/" + id + "/market_chart?vs_currency="
-                    + currency + "&days=" + days + "&interval=daily");
+                    + currency + "&days=" + days);
             jsonString = read(connect(url));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -246,6 +248,13 @@ public class APIClient {
         return ret;
     }
 
+    /**
+     *
+     * @param id id kryptowaluty
+     * @param currency waluta cen itp.
+     * @return Obiekt zawierający szczegółowe dane dotyczące danej kryptowaluty
+     */
+
     public TableData getTableData(String id, String currency) {
         String jsonString = "";
 
@@ -274,9 +283,35 @@ public class APIClient {
         tbl.setLow24h(marketData.getJSONObject("low_24h").getInt(currency));
         tbl.setAth(marketData.getJSONObject("ath").getInt(currency));
         tbl.setAtl(marketData.getJSONObject("atl").getInt(currency));
+        tbl.setImageLargeUrl(obj.getJSONObject("image").getString("large"));
+        tbl.setImageSmallUrl(obj.getJSONObject("image").getString("thumb"));
 
         return tbl;
     }
 
+    /**
+     * Funkcja zwraca listę dostępnych walut, na które można przeliczać ceny kryptowalut
+     *
+     * @return Lista dostępnych walut
+     */
+    public List<String> getSupportedCurrencies() {
+        String jsonString = "";
 
+        try {
+            URL url = new URL(sURL + "/simple/supported_vs_currencies");
+
+            jsonString = read(connect(url));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray arr = new JSONArray(jsonString);
+        List<String> currencies = new ArrayList<>();
+
+        for (int i = 0; i < arr.length(); i++) {
+            currencies.add(arr.getString(i));
+        }
+
+        return currencies;
+    }
 }

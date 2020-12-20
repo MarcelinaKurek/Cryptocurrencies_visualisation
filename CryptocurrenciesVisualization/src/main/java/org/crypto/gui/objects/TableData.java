@@ -13,6 +13,9 @@ public class TableData {
     private int ath;
     private int atl;
 
+    private String imageSmallUrl;
+    private String imageLargeUrl;
+
     public TableData(String id) {
         this.id = id;
     }
@@ -94,6 +97,22 @@ public class TableData {
         return id;
     }
 
+    public String getImageSmallUrl() {
+        return imageSmallUrl;
+    }
+
+    public void setImageSmallUrl(String imageSmallUrl) {
+        this.imageSmallUrl = imageSmallUrl;
+    }
+
+    public String getImageLargeUrl() {
+        return imageLargeUrl;
+    }
+
+    public void setImageLargeUrl(String imageLargeUrl) {
+        this.imageLargeUrl = imageLargeUrl;
+    }
+
     @Override
     public String toString() {
         return "TableData{" +
@@ -107,6 +126,8 @@ public class TableData {
                 ", high24h=" + high24h +
                 ", ath=" + ath +
                 ", atl=" + atl +
+                ", imageSmallUrl='" + imageSmallUrl + '\'' +
+                ", imageLargeUrl='" + imageLargeUrl + '\'' +
                 '}';
     }
 }

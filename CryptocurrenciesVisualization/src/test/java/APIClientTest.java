@@ -5,7 +5,6 @@ import org.crypto.services.APIClient;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class APIClientTest {
 
@@ -43,7 +42,7 @@ public class APIClientTest {
     public void testTop() {
         List<Coin> top = client.getTop("usd");
 
-        top.forEach(coin -> System.out.println("name = " + coin.getName() + ", imgUrl = " + coin.getImageUrl()));
+        top.forEach(coin -> System.out.println("name = " + coin.getName() + ", imageUrl = " + coin.getImageUrl()));
     }
 
     @org.junit.Test
@@ -79,5 +78,12 @@ public class APIClientTest {
         TableData bitcoinTableData = client.getTableData("bitcoin", "pln");
 
         System.out.println(bitcoinTableData);
+    }
+
+    @org.junit.Test
+    public void testVsCurrencies() {
+        List<String> li = client.getSupportedCurrencies();
+
+        li.forEach(System.out::println);
     }
 }

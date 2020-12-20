@@ -51,9 +51,7 @@ public class Coin {
 
     public int getMarketCap() { return marketCap; }
 
-    public Double getPriceChangePercentage24h() {
-        return priceChangePercentage24h;
-    }
+    public Double getPriceChangePercentage24h() { return priceChangePercentage24h; }
 
     public void setScore(int score) {
         this.score = score;
@@ -66,7 +64,7 @@ public class Coin {
     }
 
     public void setPriceChangePercentage24h(Double priceChangePercentage24h) {
-        this.priceChangePercentage24h = priceChangePercentage24h;
+        this.priceChangePercentage24h = Math.round(priceChangePercentage24h * 100.0) / 100.0;
     }
 
     public void setMarketCapRank(int marketCapRank) {
