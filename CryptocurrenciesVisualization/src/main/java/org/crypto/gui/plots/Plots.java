@@ -116,9 +116,9 @@ public class Plots {
     public static void main(String[] args) throws ParseException {
         Plots plots = new Plots();
         APIClient api = new APIClient();
-        //w.ExchangeRatePlot("bitcoin", "usd", 7);
-        //w.ExchangeRateDiffPlot("bitcoin", "usd", 7);
-        //w.CandleStickPlot("bitcoin", "usd", 14);
+        plots.ExchangeRatePlot("bitcoin", "usd", 7);
+        plots.ExchangeRateDiffPlot("bitcoin", "usd", 7);
+        plots.CandleStickPlot("bitcoin", "usd", 14);
         //System.out.println(api.getTop("bitcoin")); //coś nie działą
 
 
