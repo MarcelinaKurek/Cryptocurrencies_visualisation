@@ -133,43 +133,43 @@ public class MainViewController implements Initializable {
      * @param actionEvent
      * @param name - nazwa kryptowaluty
      */
-   public void displayCoin(ActionEvent actionEvent, String name) {
-       Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+    public void displayCoin(ActionEvent actionEvent, String name) {
+        Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-       Optional<String> id = allCoins
-               .entrySet()
-               .stream()
-               .filter(entry -> name.equals(entry.getValue()))
-               .map(Map.Entry::getKey)
-               .findFirst();
+        Optional<String> id = allCoins
+                .entrySet()
+                .stream()
+                .filter(entry -> name.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst();
 
-       if (id.isPresent()) {
-           coinId = id.get();
-           coinViewController.setCurrency(currency);
-           coinViewController.setCoinId(coinId);
-           coinViewController.updateScene();
-           primaryStage.setScene(secondScene);
-       }
-   }
+        if (id.isPresent()) {
+            coinId = id.get();
+            coinViewController.setCurrency(currency);
+            coinViewController.setCoinId(coinId);
+            coinViewController.updateScene();
+            primaryStage.setScene(secondScene);
+        }
+    }
 
-   public void setSecondScene(Scene scene) {
+    public void setSecondScene(Scene scene) {
         this.secondScene = scene;
-   }
+    }
 
-   public void setCurrency(String currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
-   }
+    }
 
-   public void setCoinViewController(CoinViewController coinViewController) {
+    public void setCoinViewController(CoinViewController coinViewController) {
         this.coinViewController = coinViewController;
-   }
+    }
 
-   public String getCurrency() {
+    public String getCurrency() {
         return currency;
-   }
+    }
 
-   public String getCoinId() {
+    public String getCoinId() {
         return coinId;
-   }
+    }
 
 }
