@@ -7,8 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.controlsfx.control.textfield.TextFields;
-import org.crypto.gui.objects.CryptoCurrency;
-import org.crypto.gui.objects.CCurrencyListViewCell;
+import org.crypto.gui.objects.Coin;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,28 +15,28 @@ import java.util.ResourceBundle;
 public class MainViewController implements Initializable {
 
     @FXML
-    private ListView<CryptoCurrency> trending;
+    private ListView<Coin> trending;
 
     @FXML
     private TextField textField;
 
     @FXML Button go;
 
-    private final ObservableList<CryptoCurrency> cryptoCurrencyObservableList;
+    private final ObservableList<Coin> cryptoCurrencyObservableList;
 
     public MainViewController()  {
 
         cryptoCurrencyObservableList = FXCollections.observableArrayList();
 
-        cryptoCurrencyObservableList.addAll(
-                new CryptoCurrency("ice"),
-                new CryptoCurrency("ego"),
-                new CryptoCurrency("hollow"),
-                new CryptoCurrency("internet"),
-                new CryptoCurrency("stage"),
-                new CryptoCurrency("jumbo"),
-                new CryptoCurrency("zoo")
-        );
+        /*cryptoCurrencyObservableList.addAll(
+                new Coin("ice"),
+                new Coin("ego"),
+                new Coin("hollow"),
+                new Coin("internet"),
+                new Coin("stage"),
+                new Coin("jumbo"),
+                new Coin("zoo")
+        );*/
     }
 
     @Override
