@@ -1,6 +1,7 @@
 package org.crypto.services;
 
 import org.crypto.gui.objects.Coin;
+import org.crypto.gui.objects.TableData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -136,6 +137,7 @@ public class APIClient {
     /**
      * Zwraca listę najważniejszych kryptowalut
      *
+     * @param currency w jakiej walucie ma być cena
      * @return 7 elementowa lista obiektów Coin
      */
     public List<Coin> getTop(String currency) {
@@ -154,10 +156,12 @@ public class APIClient {
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
+            String imageUrl = obj.getString("image").replace("large", "thumb");
+
             Coin coin = new Coin(obj.getString("id"),
                     obj.getString("name"),
                     obj.getString("symbol"),
-                    obj.getString("image"),
+                    imageUrl,
                     obj.getInt("market_cap_rank"));
 
             coin.setCurrentPrice(obj.getDouble("current_price"));
@@ -184,7 +188,7 @@ public class APIClient {
 
         try {
             URL url = new URL(sURL + "/coins/" + id + "/market_chart?vs_currency="
-                    + currency + "&days=" + days + "&interval=daily");
+                    + currency + "&days=" + days);
             jsonString = read(connect(url));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -244,4 +248,96 @@ public class APIClient {
         return ret;
     }
 
+    /**
+     *
+     * @param id id kryptowaluty
+     * @param currency waluta cen itp.
+     * @return Obiekt zawierający szczegółowe dane dotyczące danej kryptowaluty
+     */
+
+    public TableData getTableData(String id, String currency) {
+        String jsonString = "";
+
+        try {
+            URL url = new URL(sURL + "/coins/" + id + "?localization=false&ticker=false" +
+                    "&market_data=true" +
+                    "&community_data=true" +
+                    "&developer_data=true" +
+                    "&sparkline=false");
+
+            jsonString = read(connect(url));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject obj = new JSONObject(jsonString);
+        TableData tbl = new TableData(id);
+        JSONObject marketData = obj.getJSONObject("market_data");
+
+        if (obj.isNull("market_cap_rank")) tbl.setMarketCapRank(-1);
+        else tbl.setMarketCapRank(obj.getInt("market_cap_rank"));
+
+        if (marketData.getJSONObject("current_price").isEmpty()) tbl.setCurrentPrice(null);
+        else tbl.setCurrentPrice(marketData.getJSONObject("current_price").getDouble(currency));
+
+        if (marketData.getJSONObject("market_cap").isEmpty()) tbl.setMarketCap(-1);
+        else tbl.setMarketCap(marketData.getJSONObject("market_cap").getLong(currency));
+
+        if (marketData.getJSONObject("total_volume").isEmpty()) tbl.setTotalVolume(-1);
+        else tbl.setTotalVolume(marketData.getJSONObject("total_volume").getLong(currency));
+
+        JSONObject high = new JSONObject(marketData.getJSONObject("high_24h").toString().toLowerCase());
+        JSONObject low = new JSONObject(marketData.getJSONObject("low_24h").toString().toLowerCase());
+
+        if (marketData.isNull("high_24h") ||
+                high.isNull(currency)) {
+            tbl.setHigh24h(null);
+            tbl.setLow24h(null);
+        }
+        else {
+            tbl.setHigh24h(high.getDouble(currency));
+            tbl.setLow24h(low.getDouble(currency));
+        }
+
+        tbl.setWebsite(obj.getJSONObject("links").getJSONArray("homepage").getString(0));
+
+        if (marketData.getJSONObject("ath").isEmpty()) {
+            tbl.setAth(null);
+            tbl.setAtl(null);
+        } else {
+            tbl.setAth(marketData.getJSONObject("ath").getDouble(currency));
+            tbl.setAtl(marketData.getJSONObject("atl").getDouble(currency));
+        }
+
+        tbl.setImageLargeUrl(obj.getJSONObject("image").getString("large"));
+        tbl.setImageSmallUrl(obj.getJSONObject("image").getString("thumb"));
+
+        return tbl;
+    }
+
+    /**
+     * Funkcja zwraca listę dostępnych walut, na które można przeliczać ceny kryptowalut
+     *
+     * @return Lista dostępnych walut
+     */
+    public List<String> getSupportedCurrencies() {
+        String jsonString = "";
+
+        try {
+            URL url = new URL(sURL + "/simple/supported_vs_currencies");
+
+            jsonString = read(connect(url));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray arr = new JSONArray(jsonString);
+        List<String> currencies = new ArrayList<>();
+
+        for (int i = 0; i < arr.length(); i++) {
+            currencies.add(arr.getString(i));
+        }
+
+        return currencies;
+    }
 }
