@@ -119,7 +119,7 @@ public class Plots {
         plots.ExchangeRatePlot("bitcoin", "usd", 7);
         plots.ExchangeRateDiffPlot("bitcoin", "usd", 7);
         plots.CandleStickPlot("bitcoin", "usd", 14);
-        //System.out.println(api.getTop("bitcoin")); //coś nie działą
+
 
 
     }
