@@ -15,7 +15,7 @@ public class TrendingTableView extends TableView<Coin> {
     public TrendingTableView() {
 
         TableColumn<Coin, String> score = new TableColumn<>("#");
-        score.setCellValueFactory(new PropertyValueFactory<>("marketCapRank"));
+        score.setCellValueFactory(new PropertyValueFactory<>("score"));
         score.getStyleClass().add("table-column-short");
 
         TableColumn<Coin, String> logo = new TableColumn<>("");

@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="732.0"
+<BorderPane fx:id="coinViewBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="732.0"
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Canvas fx:id="chart" height="231.0" width="444.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane fx:id="gridPaneTable" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -35,20 +35,20 @@
          <children>
             <Label text="Price" />
             <Label fx:id="price" text="Label" GridPane.columnIndex="1" />
-            <Label text="Marke Cap Dominancet" GridPane.rowIndex="2" />
-            <Label fx:id="market_cap_dom" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Marke Cap Dominance" GridPane.rowIndex="2" />
+            <Label fx:id="marketCapDom" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="24h Low / 24h High" GridPane.rowIndex="4" />
             <Label text="Market Cap" GridPane.rowIndex="1" />
-            <Label fx:id="market_cap" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="marketCap" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Trading Volume" GridPane.rowIndex="3" />
-            <Label fx:id="trading_vol" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="low_high_24" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="tradingVol" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="lowHigh24" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Market Cap Rank" GridPane.rowIndex="5" />
-            <Label fx:id="mkt_cap_rank" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="mktCapRank" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="All-Time-High" GridPane.rowIndex="6" />
-            <Label fx:id="all_time_high" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="allTimeHigh" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label text="All-Time-Low" GridPane.rowIndex="7" />
-            <Label fx:id="all_time_low" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="allTimeLow" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </right>
@@ -59,10 +59,10 @@
                <children>
                   <ImageView fx:id="logo" fitHeight="46.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="name" text="Label" />
-                  <Label fx:id="price_top" text="Label" />
+                  <Label fx:id="priceTop" text="Label" />
                </children>
             </HBox>
-            <GridPane>
+            <GridPane fx:id="gridPaneTop">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0" prefWidth="132.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="614.0" minWidth="10.0" prefWidth="600.0" />
@@ -76,9 +76,9 @@
                   <Label text="Market Cap" />
                   <Label text="Website" GridPane.rowIndex="1" />
                   <Label text="Currency" GridPane.rowIndex="2" />
-                  <Label fx:id="mkt_cap_top" text="Label" GridPane.columnIndex="1" />
-                  <Label fx:id="website_top" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ChoiceBox fx:id="currency_top" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="mktCapTop" text="Label" GridPane.columnIndex="1" />
+                  <Label fx:id="websiteTop" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ChoiceBox fx:id="currencyTop" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.crypto.gui.controllers.CoinViewController;
 import org.crypto.gui.controllers.MainViewController;
+import org.crypto.services.APIClient;
 
 public class App extends Application {
     private String currency = "eur";
@@ -14,9 +15,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        APIClient apiClient = new APIClient();
 
-        MainViewController mainViewController = new MainViewController(currency);
-        CoinViewController coinViewController = new CoinViewController();
+        MainViewController mainViewController = new MainViewController(currency, apiClient);
+        CoinViewController coinViewController = new CoinViewController(apiClient);
 
         mainViewController.setCoinViewController(coinViewController);
 
@@ -30,6 +32,7 @@ public class App extends Application {
         FXMLLoader secondLoader = new FXMLLoader(getClass().getResource("/coinView.fxml"));
         secondLoader.setController(coinViewController);
         Parent secondPane = secondLoader.load();
+        secondPane.getStylesheets().add(String.valueOf(getClass().getResource("/stylesheets/style.css")));
         Scene secondScene = new Scene(secondPane, 1600, 800);
 
 

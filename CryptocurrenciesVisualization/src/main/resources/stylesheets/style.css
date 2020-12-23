@@ -165,3 +165,15 @@ input {
 .table-view .scroll-bar {
     -fx-padding: 0px;
 }
+
+#coinViewBorderPane {
+    -fx-padding: 40px;
+
+    -fx-background-color: white;
+
+    -fx-min-height: 600px;
+    -fx-min-width: 1000px;
+
+    -fx-max-width: 1000;
+
+}

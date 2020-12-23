@@ -3,15 +3,15 @@ package org.crypto.gui.objects;
 public class TableData {
 
     private final String id;
-    private int marketCap;
+    private long marketCap;
     private int marketCapRank;
     private Double currentPrice;
     private String website;
     private long totalVolume;
-    private int low24h;
-    private int high24h;
-    private int ath;
-    private int atl;
+    private Double low24h;
+    private Double high24h;
+    private Double ath;
+    private Double atl;
 
     private String imageSmallUrl;
     private String imageLargeUrl;
@@ -20,11 +20,11 @@ public class TableData {
         this.id = id;
     }
 
-    public int getMarketCap() {
+    public long getMarketCap() {
         return marketCap;
     }
 
-    public void setMarketCap(int marketCap) {
+    public void setMarketCap(long marketCap) {
         this.marketCap = marketCap;
     }
 
@@ -60,36 +60,35 @@ public class TableData {
         this.totalVolume = totalVolume;
     }
 
-    public int getLow24h() {
+    public Double getLow24h() {
         return low24h;
     }
 
-    public void setLow24h(int low24h) {
+    public void setLow24h(Double low24h) {
         this.low24h = low24h;
     }
 
-    public int getHigh24h() {
+    public Double getHigh24h() {
         return high24h;
     }
 
-    public void setHigh24h(int high24h) {
+    public void setHigh24h(Double high24h) {
         this.high24h = high24h;
     }
 
-
-    public int getAth() {
+    public Double getAth() {
         return ath;
     }
 
-    public void setAth(int ath) {
+    public void setAth(Double ath) {
         this.ath = ath;
     }
 
-    public int getAtl() {
+    public Double getAtl() {
         return atl;
     }
 
-    public void setAtl(int atl) {
+    public void setAtl(Double atl) {
         this.atl = atl;
     }
 

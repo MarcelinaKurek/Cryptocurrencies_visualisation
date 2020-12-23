@@ -49,7 +49,7 @@ public class MainViewController implements Initializable {
     private List<Coin> top7Trending;
     private List<Coin> top7Ranking;
     private Map<String, String> allCoins;
-    private final String[] currencies = {"eur", "usd", "pln"};
+    private List<String> currencies = null;
 
     private CoinViewController coinViewController = null;
     private Scene secondScene;
@@ -57,9 +57,9 @@ public class MainViewController implements Initializable {
     private String coinId;
 
 
-    public MainViewController(String currency)  {
+    public MainViewController(String currency, APIClient apiClient)  {
         this.currency = currency;
-        apiClient = new APIClient();
+        this.apiClient = apiClient;
     }
 
     @Override
@@ -106,6 +106,7 @@ public class MainViewController implements Initializable {
         top7Trending = apiClient.getTrending();
         top7Ranking = apiClient.getTop(currency);
         allCoins = apiClient.getCoinList();
+        currencies = apiClient.getSupportedCurrencies();
 
         trendingObservableList = FXCollections.observableArrayList();
         trendingObservableList.addAll(top7Trending);

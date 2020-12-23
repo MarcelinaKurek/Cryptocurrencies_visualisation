@@ -42,7 +42,7 @@ public class Coin {
     }
 
     public int getScore() {
-        return score;
+        return score + 1;
     }
 
     public Double getCurrentPrice() {
