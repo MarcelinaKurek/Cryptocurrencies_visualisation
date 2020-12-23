@@ -126,6 +126,7 @@ public class MainViewController implements Initializable {
         ranking.getItems().clear();
         ranking.getItems().addAll(rankingObservableList);
         ranking.refresh();
+
     }
 
     /**

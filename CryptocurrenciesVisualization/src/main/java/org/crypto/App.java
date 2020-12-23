@@ -33,6 +33,7 @@ public class App extends Application {
         secondLoader.setController(coinViewController);
         Parent secondPane = secondLoader.load();
         secondPane.getStylesheets().add(String.valueOf(getClass().getResource("/stylesheets/style.css")));
+
         Scene secondScene = new Scene(secondPane, 1600, 800);
 
 

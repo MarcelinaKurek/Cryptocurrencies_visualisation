@@ -2,6 +2,7 @@ package org.crypto.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+<<<<<<< HEAD
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -62,6 +63,21 @@ public class CoinViewController implements Initializable {
     public CoinViewController(APIClient apiClient) {
         this.apiClient = apiClient;
         this.currencies = apiClient.getSupportedCurrencies();
+=======
+import javafx.scene.control.Label;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CoinViewController implements Initializable {
+    @FXML
+    private Label name;
+
+    private String currency;
+    private String coinId;
+
+    public CoinViewController() {
+>>>>>>> master
 
     }
 
@@ -72,15 +88,19 @@ public class CoinViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+<<<<<<< HEAD
         Stream.of(price, marketCap, marketCapDom, mktCapRank, lowHigh24, allTimeHigh, allTimeLow, tradingVol)
                 .forEach(e -> e.getStyleClass().add("table-element-content"));
         gridPaneTable.setGridLinesVisible(true);
         gridPaneTable.setAlignment(Pos.CENTER_LEFT);
         gridPaneTable.getRowConstraints().forEach(row -> row.setMaxHeight(40));
+=======
+>>>>>>> master
 
     }
 
     public void prepareScene() {
+<<<<<<< HEAD
         if (coinData != null) {
             logo.setImage(new Image(coinData.getImageLargeUrl()));
             name.setText(coinData.getId());
@@ -105,6 +125,13 @@ public class CoinViewController implements Initializable {
     public void updateScene() {
         coinData = apiClient.getTableData(coinId, currency);
         prepareScene();
+=======
+
+    }
+
+    public void updateScene() {
+        name.setText(coinId);
+>>>>>>> master
     }
 
     public void setCurrency(String currency) {
@@ -113,6 +140,9 @@ public class CoinViewController implements Initializable {
 
     public void setCoinId(String coinId) {
         this.coinId = coinId;
+<<<<<<< HEAD
         coinData = apiClient.getTableData(coinId, currency);
+=======
+>>>>>>> master
     }
 }
