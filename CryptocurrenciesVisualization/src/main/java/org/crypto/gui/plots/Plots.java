@@ -1,13 +1,17 @@
 package org.crypto.gui.plots;
 
+import javafx.scene.Scene;
 import org.crypto.services.APIClient;
 import tech.tablesaw.api.*;
 import tech.tablesaw.columns.Column;
+import tech.tablesaw.io.Destination;
+import tech.tablesaw.io.html.HtmlWriter;
 import tech.tablesaw.plotly.Plot;
 import tech.tablesaw.plotly.api.BoxPlot;
 import tech.tablesaw.plotly.api.CandlestickPlot;
 import tech.tablesaw.plotly.api.LinePlot;
 import tech.tablesaw.plotly.api.TimeSeriesPlot;
+import tech.tablesaw.plotly.components.Figure;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -15,30 +19,49 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-public class Plots {
 
-    public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+public class Plots {
+    public enum PlotType {
+        EXCHANGE_RATE_DIFF,
+        CANDLE_PLOT,
+        EXCHANGE_RATE
+    }
+
+    public static String toHtml(Figure figure) {
+        String begin = "<!DOCTYPE html>\n" +
+                "<html lang=\"en-US\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div id='target' ></div>";
+        String end = "</body>\n" +
+                "</html>";
+
+        return begin + figure.asJavascript("target") + end;
+    }
+
+    private static LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
 
-    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+    private static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
     }
 
-    public void ExchangeRatePlot(String id, String currency, int days ){
-        APIClient api = new APIClient();
-        Plots plots = new Plots();
-        Date[] dates = api.getMarketChart(id, currency, days).keySet().toArray(new Date[0]);
-        Double[] values = api.getMarketChart(id, currency, days).values().toArray(new Double[0]);
+    public static Figure ExchangeRatePlot(String id, String currency, int days ){
+        Date[] dates = APIClient.getMarketChart(id, currency, days).keySet().toArray(new Date[0]);
+        Double[] values = APIClient.getMarketChart(id, currency, days).values().toArray(new Double[0]);
 
         LocalDateTime[] datetimes = new LocalDateTime[dates.length];
         int i = 0;
         for (Date t : dates){
-            LocalDateTime dt = plots.convertToLocalDateTimeViaInstant(t);
+            LocalDateTime dt = convertToLocalDateTimeViaInstant(t);
             datetimes[i] = dt;
             i++;
         }
@@ -48,22 +71,19 @@ public class Plots {
         DoubleColumn y = DoubleColumn.create(yaxis, values);
         Table t = Table.create("Exchange Rate");
         t.addColumns(x1, y);
-        Plot.show(TimeSeriesPlot.create("Exchange Rate", t, "date", yaxis));
-
+        return TimeSeriesPlot.create("Exchange Rate", t, "date", yaxis);
     }
 
-    public void ExchangeRateDiffPlot(String id, String currency, int days){
-        APIClient api = new APIClient();
-        Plots plots = new Plots();
-        Date[] dates = api.getMarketChart(id, currency, days).keySet().toArray(new Date[0]);
-        Double[] values = api.getMarketChart(id, currency, days).values().toArray(new Double[0]);
+    public static Figure ExchangeRateDiffPlot(String id, String currency, int days){
+        Date[] dates = APIClient.getMarketChart(id, currency, days).keySet().toArray(new Date[0]);
+        Double[] values = APIClient.getMarketChart(id, currency, days).values().toArray(new Double[0]);
 
         double change = 0;
         Double[] ychange = new Double[dates.length];
         LocalDateTime[] datetimes = new LocalDateTime[dates.length];
         ychange[0] = 0.0;
         for (int i = 1; i < dates.length; i++){
-            LocalDateTime dt = plots.convertToLocalDateTimeViaInstant(dates[i]);
+            LocalDateTime dt = convertToLocalDateTimeViaInstant(dates[i]);
             datetimes[i] = dt;
             ychange[i] = values[i] - values[i -1];
         }
@@ -72,19 +92,18 @@ public class Plots {
         DoubleColumn y3 = DoubleColumn.create("values", ychange);
         Table t3 = Table.create("Exchange Rate Growth");
         t3.addColumns(x1, y3);
-        Plot.show(TimeSeriesPlot.create("Exchange Rate Growth", t3, "date", "values"));
+
+        return TimeSeriesPlot.create("Exchange Rate Growth", t3, "date", "values");
     }
 
-    public void CandleStickPlot(String id, String currency, int days){
-        APIClient api = new APIClient();
-        Plots plots = new Plots();
-        Map<Date, List<Double>> data = api.getOHLC(id, currency, days);
+    public static Figure CandleStickPlot(String id, String currency, int days){
+        Map<Date, List<Double>> data = APIClient.getOHLC(id, currency, days);
         Date[] dates = data.keySet().toArray(new Date[0]);
 
         LocalDate[] dt = new LocalDate[dates.length];
         int j = 0;
         for (Date t2 : dates){
-            LocalDate dt2 = plots.convertToLocalDateViaInstant(t2);
+            LocalDate dt2 = convertToLocalDateViaInstant(t2);
             dt[j] = dt2;
             j++;
         }
@@ -109,7 +128,9 @@ public class Plots {
         DoubleColumn yC = DoubleColumn.create("close value", close);
         Table ohlc = Table.create("Wykres OHLC");
         ohlc.addColumns(x2, yO, yH, yL, yC);
-        Plot.show(CandlestickPlot.create("Candlestick Plot", ohlc, "date", "open value", "max value", "min value", "close value" ));
+        Figure plot = CandlestickPlot.create("Candlestick Plot", ohlc, "date", "open value", "max value", "min value", "close value" );
+        //Plot.show(CandlestickPlot.create("Candlestick Plot", ohlc, "date", "open value", "max value", "min value", "close value" ));
+        return plot;
 
     }
 
@@ -119,7 +140,6 @@ public class Plots {
         plots.ExchangeRatePlot("bitcoin", "usd", 7);
         plots.ExchangeRateDiffPlot("bitcoin", "usd", 7);
         plots.CandleStickPlot("bitcoin", "usd", 14);
-
 
 
     }

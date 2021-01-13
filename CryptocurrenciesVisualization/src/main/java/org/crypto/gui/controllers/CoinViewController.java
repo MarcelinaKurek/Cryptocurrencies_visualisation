@@ -1,22 +1,28 @@
 package org.crypto.gui.controllers;
 
+import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-<<<<<<< HEAD
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import org.crypto.gui.objects.TableData;
+import org.crypto.gui.plots.Plots;
 import org.crypto.services.APIClient;
+import tech.tablesaw.plotly.components.Figure;
+
+import javafx.scene.web.*;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class CoinViewController implements Initializable {
@@ -24,21 +30,25 @@ public class CoinViewController implements Initializable {
     @FXML
     private ImageView logo;
     @FXML
-    private ChoiceBox<String> currencyTop;
-    @FXML
     private BorderPane coinViewBorderPane;
     @FXML
     private GridPane gridPaneTop;
     @FXML
     private GridPane gridPaneTable;
     @FXML
+    private HBox titlePane;
+    @FXML
     private Label name;
+    @FXML
+    private Hyperlink websiteTop;
     @FXML
     private Label priceTop;
     @FXML
     private Label price;
     @FXML
     private Label marketCap;
+    @FXML
+    private Label mktCapTop;
     @FXML
     private Label marketCapDom;
     @FXML
@@ -51,60 +61,101 @@ public class CoinViewController implements Initializable {
     private Label allTimeHigh;
     @FXML
     private Label allTimeLow;
+    @FXML
+    private ComboBox<String> currencyTop;
 
+    private Figure fig;
+    private WebView webView = new WebView();
 
-    private APIClient apiClient;
     private List<String> currencies;
 
     private String currency;
     private String coinId;
     private TableData coinData = null;
+    private int days = 7;
+    private Plots.PlotType plotType = Plots.PlotType.EXCHANGE_RATE;
 
-    public CoinViewController(APIClient apiClient) {
-        this.apiClient = apiClient;
-        this.currencies = apiClient.getSupportedCurrencies();
-=======
-import javafx.scene.control.Label;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class CoinViewController implements Initializable {
-    @FXML
-    private Label name;
-
-    private String currency;
-    private String coinId;
+    private boolean readyScene = false;
+    private Consumer<String> redirectToUrl = null;
 
     public CoinViewController() {
->>>>>>> master
-
+        this.currencies = APIClient.getSupportedCurrencies();
+        webView.setMaxSize(800, 600);
     }
 
-    public CoinViewController(String currency, String coinId) {
-        this.currency = currency;
-        this.coinId = coinId;
-    }
+//    public CoinViewController(String currency, String coinId) {
+//        this.currency = currency;
+//        this.coinId = coinId;
+//        webView.setMaxSize(800, 600);
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-<<<<<<< HEAD
+
         Stream.of(price, marketCap, marketCapDom, mktCapRank, lowHigh24, allTimeHigh, allTimeLow, tradingVol)
                 .forEach(e -> e.getStyleClass().add("table-element-content"));
-        gridPaneTable.setGridLinesVisible(true);
+        gridPaneTable.setGridLinesVisible(false);
         gridPaneTable.setAlignment(Pos.CENTER_LEFT);
+        gridPaneTable.setPadding(new Insets(10));
         gridPaneTable.getRowConstraints().forEach(row -> row.setMaxHeight(40));
-=======
->>>>>>> master
-
+        gridPaneTable.getColumnConstraints().forEach(col -> col.setMinWidth(150));
     }
 
     public void prepareScene() {
-<<<<<<< HEAD
         if (coinData != null) {
+            readyScene = true;
             logo.setImage(new Image(coinData.getImageLargeUrl()));
-            name.setText(coinData.getId());
+            name.setText(coinData.getName());
+            websiteTop.setText(coinData.getWebsite());
+            websiteTop.setTooltip(new Tooltip(coinData.getWebsite()));
+            websiteTop.setOnAction((ActionEvent event) -> {
+                Hyperlink h = (Hyperlink) event.getTarget();
+                String s = h.getTooltip().getText();
+                redirectToUrl.accept(s);
+                event.consume();
+            });
+
+            currencyTop.getItems().addAll(currencies);
+            currencyTop.setValue(currency);
+            currencyTop.setOnAction(e -> {
+                currency = currencyTop.getValue();
+                updateScene();
+                updateFig();
+            });
+            titlePane.setSpacing(20);
+            titlePane.setAlignment(Pos.CENTER_LEFT);
+            name.setStyle("-fx-font-size: 20px");
+
+            VBox vBox = new VBox();
+            vBox.getChildren().addAll(dateAndTypeButtons(), webView);
+            coinViewBorderPane.setCenter(vBox);
+            reloadAfterChangingCurrency();
+
+            // hide scrollbars
+            webView.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
+                @Override public void onChanged(Change<? extends Node> change) {
+                    Set<Node> deadSeaScrolls = webView.lookupAll(".scroll-bar");
+                    for (Node scroll : deadSeaScrolls) {
+                        scroll.setVisible(false);
+                    }
+                }
+            });
+        }
+    }
+
+    public void updateScene() {
+        coinData = APIClient.getTableData(coinId, currency);
+        if (readyScene) {
+            reloadAfterChangingCurrency();
+        } else {
+            prepareScene();
+        }
+    }
+
+    private void reloadAfterChangingCurrency() {
+        if (coinData != null) {
             priceTop.setText(String.valueOf(coinData.getCurrentPrice()));
+            mktCapTop.setText(String.valueOf(coinData.getMarketCap()));
             price.setText(String.valueOf(coinData.getCurrentPrice()));
             marketCap.setText(String.valueOf(coinData.getMarketCap()));
             tradingVol.setText(String.valueOf(coinData.getTotalVolume()));
@@ -112,26 +163,48 @@ public class CoinViewController implements Initializable {
             mktCapRank.setText(String.valueOf(coinData.getMarketCapRank()));
             allTimeLow.setText(String.valueOf(coinData.getAtl()));
             allTimeHigh.setText(String.valueOf(coinData.getAth()));
-
-            currencyTop.getItems().addAll(currencies);
-            currencyTop.setValue(currency);
-            currencyTop.setOnAction(e -> {
-                currency = currencyTop.getValue();
-                updateScene();
-            });
         }
     }
 
-    public void updateScene() {
-        coinData = apiClient.getTableData(coinId, currency);
-        prepareScene();
-=======
-
+    private HBox dateAndTypeButtons() {
+        HBox hBox = new HBox();
+        Button h_24 = new Button("24h");
+        h_24.setOnAction(e -> dateButtonAction(1));
+        Button d_7 = new Button("7d");
+        d_7.setOnAction(e -> dateButtonAction(7));
+        Button d_30 = new Button("30d");
+        d_30.setOnAction(e -> dateButtonAction(30));
+        Button y_1 = new Button("1y");
+        y_1.setOnAction(e -> dateButtonAction(365));
+        Button candle = new Button("Candle plot");
+        candle.setOnAction(e -> plotTypeButtonAction(Plots.PlotType.CANDLE_PLOT));
+        Button exchangeRate = new Button("Linear plot");
+        exchangeRate.setOnAction(e -> plotTypeButtonAction(Plots.PlotType.EXCHANGE_RATE));
+        Button exchangeRateDiff = new Button("Linear plot - diff");
+        exchangeRateDiff.setOnAction(e -> plotTypeButtonAction(Plots.PlotType.EXCHANGE_RATE_DIFF));
+        hBox.getChildren().addAll(h_24, d_7, d_30, y_1, candle, exchangeRate, exchangeRateDiff);
+        return hBox;
     }
 
-    public void updateScene() {
-        name.setText(coinId);
->>>>>>> master
+    private void dateButtonAction(int days) {
+        this.days = days;
+        updateFig();
+    }
+
+    private void plotTypeButtonAction(Plots.PlotType plotType) {
+        this.plotType = plotType;
+        updateFig();
+    }
+
+    private void updateFig() {
+        if (plotType.equals(Plots.PlotType.CANDLE_PLOT)) {
+            fig = Plots.CandleStickPlot(coinId, currency, days);
+        } else if (plotType.equals(Plots.PlotType.EXCHANGE_RATE)) {
+            fig = Plots.ExchangeRatePlot(coinId, currency, days);
+        } else if (plotType.equals(Plots.PlotType.EXCHANGE_RATE_DIFF)) {
+            fig = Plots.ExchangeRateDiffPlot(coinId, currency, days);
+        }
+        webView.getEngine().loadContent(Plots.toHtml(fig), "text/html");
     }
 
     public void setCurrency(String currency) {
@@ -140,9 +213,18 @@ public class CoinViewController implements Initializable {
 
     public void setCoinId(String coinId) {
         this.coinId = coinId;
-<<<<<<< HEAD
-        coinData = apiClient.getTableData(coinId, currency);
-=======
->>>>>>> master
+        coinData = APIClient.getTableData(coinId, currency);
     }
+
+    public void setFig(Figure fig) {
+        this.fig = fig;
+        webView.getEngine().loadContent(Plots.toHtml(fig), "text/html");
+    }
+
+    public void setUrlRedirectingFunc(Consumer<String> func) {
+        this.redirectToUrl = func;
+    }
+
+
+
 }

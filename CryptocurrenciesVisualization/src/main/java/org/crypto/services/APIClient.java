@@ -15,12 +15,12 @@ import java.util.*;
 
 public class APIClient {
 
-    private final String sURL = "https://api.coingecko.com/api/v3";
+    private final static String sURL = "https://api.coingecko.com/api/v3";
 
     public APIClient() { }
 
     // Metody pomocnicze do połączenia się
-    private HttpURLConnection connect(URL url) {
+    private static HttpURLConnection connect(URL url) {
         HttpURLConnection con = null;
 
         try {
@@ -34,7 +34,7 @@ public class APIClient {
         return con;
     }
 
-    private String read(HttpURLConnection con) {
+    private static String read(HttpURLConnection con) {
         StringBuilder content = new StringBuilder();
 
         try {
@@ -59,7 +59,7 @@ public class APIClient {
      *
      * @return Odpowiedź od API
      */
-    public JSONObject ping() {
+    public static JSONObject ping() {
         String jsonString = "";
 
         try {
@@ -77,7 +77,7 @@ public class APIClient {
      *
      * @return Mapa w postaci klucz - id kryptowaluty, wartość - nazwa kryptowaluty
      */
-    public Map<String, String> getCoinList() {
+    public static Map<String, String> getCoinList() {
         String jsonString = "";
 
         try {
@@ -103,7 +103,7 @@ public class APIClient {
      *
      * @return 7 elementowa lista obiektów Coin
      */
-    public List<Coin> getTrending() {
+    public static List<Coin> getTrending() {
         String jsonString = "";
 
         try {
@@ -140,7 +140,7 @@ public class APIClient {
      * @param currency w jakiej walucie ma być cena
      * @return 7 elementowa lista obiektów Coin
      */
-    public List<Coin> getTop(String currency) {
+    public static List<Coin> getTop(String currency) {
         String jsonString = "";
 
         try {
@@ -183,7 +183,7 @@ public class APIClient {
      * @return mapa w formacie klucz - data, wartość - cena
      */
 
-    public Map<Date, Double> getMarketChart(String id, String currency, int days) {
+    public static Map<Date, Double> getMarketChart(String id, String currency, int days) {
         String jsonString = "";
 
         try {
@@ -217,7 +217,7 @@ public class APIClient {
      * @param days okres (dostępne wartości 1/7/14/30/90/180/365)
      * @return mapa w postaci klucz - data, wartość - lista OHLC w kolejności (open, high, low, close)
      */
-    public Map<Date, List<Double>> getOHLC(String id, String currency, int days) {
+    public static Map<Date, List<Double>> getOHLC(String id, String currency, int days) {
         String jsonString = "";
 
         try {
@@ -255,7 +255,7 @@ public class APIClient {
      * @return Obiekt zawierający szczegółowe dane dotyczące danej kryptowaluty
      */
 
-    public TableData getTableData(String id, String currency) {
+    public static TableData getTableData(String id, String currency) {
         String jsonString = "";
 
         try {
@@ -311,6 +311,7 @@ public class APIClient {
 
         tbl.setImageLargeUrl(obj.getJSONObject("image").getString("large"));
         tbl.setImageSmallUrl(obj.getJSONObject("image").getString("thumb"));
+        tbl.setName(obj.getString("name"));
 
         return tbl;
     }
@@ -320,7 +321,7 @@ public class APIClient {
      *
      * @return Lista dostępnych walut
      */
-    public List<String> getSupportedCurrencies() {
+    public static List<String> getSupportedCurrencies() {
         String jsonString = "";
 
         try {

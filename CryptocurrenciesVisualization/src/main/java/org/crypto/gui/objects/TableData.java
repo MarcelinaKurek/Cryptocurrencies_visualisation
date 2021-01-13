@@ -3,6 +3,7 @@ package org.crypto.gui.objects;
 public class TableData {
 
     private final String id;
+    private String name;
     private long marketCap;
     private int marketCapRank;
     private Double currentPrice;
@@ -18,6 +19,10 @@ public class TableData {
 
     public TableData(String id) {
         this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getMarketCap() {
@@ -95,6 +100,8 @@ public class TableData {
     public String getId() {
         return id;
     }
+
+    public String getName() {return name;}
 
     public String getImageSmallUrl() {
         return imageSmallUrl;

@@ -7,7 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.crypto.gui.controllers.CoinViewController;
 import org.crypto.gui.controllers.MainViewController;
-import org.crypto.services.APIClient;
+import org.crypto.gui.plots.Plots;
+import tech.tablesaw.plotly.components.Figure;
+
+import java.util.function.Consumer;
 
 public class App extends Application {
     private String currency = "eur";
@@ -15,10 +18,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        APIClient apiClient = new APIClient();
 
-        MainViewController mainViewController = new MainViewController(currency, apiClient);
-        CoinViewController coinViewController = new CoinViewController(apiClient);
+        Figure fig = Plots.CandleStickPlot("bitcoin", "usd", 7);
+
+        MainViewController mainViewController = new MainViewController(currency);
+        CoinViewController coinViewController = new CoinViewController();
+        coinViewController.setFig(fig);
 
         mainViewController.setCoinViewController(coinViewController);
 
@@ -32,10 +37,14 @@ public class App extends Application {
         FXMLLoader secondLoader = new FXMLLoader(getClass().getResource("/coinView.fxml"));
         secondLoader.setController(coinViewController);
         Parent secondPane = secondLoader.load();
+
         secondPane.getStylesheets().add(String.valueOf(getClass().getResource("/stylesheets/style.css")));
 
-        Scene secondScene = new Scene(secondPane, 1600, 800);
+        Scene secondScene = new Scene(secondPane, 1200, 900);
 
+        Consumer<String> redirectToUrl = (url) -> getHostServices().showDocument(url);
+
+        coinViewController.setUrlRedirectingFunc(redirectToUrl);
 
         mainViewController.setSecondScene(secondScene);
 
@@ -43,5 +52,6 @@ public class App extends Application {
         primaryStage.setScene(firstScene);
         primaryStage.show();
     }
+
 
 }

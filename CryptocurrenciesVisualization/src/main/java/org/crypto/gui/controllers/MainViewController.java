@@ -3,12 +3,13 @@ package org.crypto.gui.controllers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -33,19 +34,17 @@ public class MainViewController implements Initializable {
     @FXML
     private TextField textField;
 
-    @FXML
-    private Button okBtn;
 
+    private Button okBtn = new Button();
     @FXML
-    private HBox hboxRanking;
+    private HBox hbox;
 
-    private ChoiceBox<String> choiceBox;
+    private ComboBox<String> comboBox;
     private RankingTableView ranking;
     private TrendingTableView trending;
     private ObservableList<Coin> trendingObservableList;
     private ObservableList<Coin> rankingObservableList;
 
-    private APIClient apiClient = null;
     private List<Coin> top7Trending;
     private List<Coin> top7Ranking;
     private Map<String, String> allCoins;
@@ -57,15 +56,18 @@ public class MainViewController implements Initializable {
     private String coinId;
 
 
-    public MainViewController(String currency, APIClient apiClient)  {
+    public MainViewController(String currency)  {
         this.currency = currency;
-        this.apiClient = apiClient;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         load();
-
+        textField.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                displayCoin(e, textField.getText());
+            }
+        });
         okBtn.setOnAction(e -> displayCoin(e, textField.getText()));
 
         trending = new TrendingTableView();
@@ -87,15 +89,17 @@ public class MainViewController implements Initializable {
         List<String> allCoinsNames = new ArrayList<>(allCoins.values());
         TextFields.bindAutoCompletion(textField, allCoinsNames);
 
-        choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll(currencies);
-        choiceBox.setValue("eur");
-        choiceBox.setOnAction(e -> {
-            currency = choiceBox.getValue();
+        comboBox = new ComboBox<String>();
+        comboBox.setVisibleRowCount(4);
+        comboBox.getItems().addAll(currencies);
+        comboBox.setValue("eur");
+        comboBox.setOnAction(e -> {
+            currency = comboBox.getValue();
             load();
             updateScene();
         });
-        hboxRanking.getChildren().add(choiceBox);
+        hbox.getChildren().add(comboBox);
+        hbox.setSpacing(150);
     }
 
     /**
@@ -103,10 +107,10 @@ public class MainViewController implements Initializable {
      * w taki sposob, aby można było stworzyć z nich tabelę.
      */
     public void load() {
-        top7Trending = apiClient.getTrending();
-        top7Ranking = apiClient.getTop(currency);
-        allCoins = apiClient.getCoinList();
-        currencies = apiClient.getSupportedCurrencies();
+        top7Trending = APIClient.getTrending();
+        top7Ranking = APIClient.getTop(currency);
+        allCoins = APIClient.getCoinList();
+        currencies = APIClient.getSupportedCurrencies();
 
         trendingObservableList = FXCollections.observableArrayList();
         trendingObservableList.addAll(top7Trending);
@@ -135,7 +139,7 @@ public class MainViewController implements Initializable {
      * @param actionEvent
      * @param name - nazwa kryptowaluty
      */
-   public void displayCoin(ActionEvent actionEvent, String name) {
+   public void displayCoin(Event actionEvent, String name) {
        Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
        Optional<String> id = allCoins
