@@ -5,7 +5,7 @@ public class TableData {
     private final String id;
     private String name;
     private long marketCap;
-    private int marketCapRank;
+    private String marketCapRank;
     private Double currentPrice;
     private String website;
     private long totalVolume;
@@ -33,11 +33,11 @@ public class TableData {
         this.marketCap = marketCap;
     }
 
-    public int getMarketCapRank() {
+    public String getMarketCapRank() {
         return marketCapRank;
     }
 
-    public void setMarketCapRank(int marketCapRank) {
+    public void setMarketCapRank(String marketCapRank) {
         this.marketCapRank = marketCapRank;
     }
 

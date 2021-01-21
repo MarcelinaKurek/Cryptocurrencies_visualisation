@@ -88,9 +88,9 @@ public class RankingTableView extends TableView<Coin> {
 
         TableColumn<Coin, String> rMktCap = new TableColumn<>("Mkt Cap");
         rMktCap.setCellFactory(param -> {
-            TableCell<?, ?> cell = new TableCell<Coin, Integer>() {
+            TableCell<?, ?> cell = new TableCell<Coin, Long>() {
                 @Override
-                public void updateItem(Integer marketCap, boolean empty) {
+                public void updateItem(Long marketCap, boolean empty) {
                     super.updateItem(marketCap, empty);
                     if (empty || marketCap == null) {
                         setGraphic(null);
