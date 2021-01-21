@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Button?>
 <BorderPane fx:id="coinViewBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Canvas fx:id="chart" height="231.0" width="444.0" BorderPane.alignment="CENTER" />
@@ -71,6 +72,7 @@
                   <Label fx:id="name" text="Label" />
                   <Region prefHeight="46.0" prefWidth="54.0" />
                   <Label fx:id="priceTop" text="Label" />
+                   <Button fx:id="goBackToMain" text="Go to Main View" />
                </children>
             </HBox>
             <GridPane fx:id="gridPaneTop">
@@ -89,7 +91,7 @@
                   <Label text="Currency" GridPane.rowIndex="2" />
                   <Label fx:id="mktCapTop" styleClass="label-top-content" text="Label" GridPane.columnIndex="1" />
                   <Hyperlink fx:id="websiteTop" styleClass="label-top-content" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="currencyTop" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="currencyTop" styleClass="combo-box" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

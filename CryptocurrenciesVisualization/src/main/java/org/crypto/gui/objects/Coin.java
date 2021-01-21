@@ -71,4 +71,5 @@ public class Coin {
         this.marketCapRank = marketCapRank;
     }
 
+
 }

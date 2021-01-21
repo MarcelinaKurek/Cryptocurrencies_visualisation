@@ -2,15 +2,18 @@ package org.crypto.gui.controllers;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.crypto.gui.objects.TableData;
 import org.crypto.gui.plots.Plots;
 import org.crypto.services.APIClient;
@@ -19,9 +22,7 @@ import tech.tablesaw.plotly.components.Figure;
 import javafx.scene.web.*;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -43,6 +44,8 @@ public class CoinViewController implements Initializable {
     private Hyperlink websiteTop;
     @FXML
     private Label priceTop;
+    @FXML
+    private Button goBackToMain;
     @FXML
     private Label price;
     @FXML
@@ -66,6 +69,7 @@ public class CoinViewController implements Initializable {
 
     private Figure fig;
     private WebView webView = new WebView();
+    private Scene secondScene = null;
 
     private List<String> currencies;
 
@@ -103,6 +107,7 @@ public class CoinViewController implements Initializable {
 
     public void prepareScene() {
         if (coinData != null) {
+            System.out.println(coinData.toString());
             readyScene = true;
             logo.setImage(new Image(coinData.getImageLargeUrl()));
             name.setText(coinData.getName());
@@ -122,6 +127,7 @@ public class CoinViewController implements Initializable {
                 updateScene();
                 updateFig();
             });
+            goBackToMain.setOnAction(this::goBackToMainView);
             titlePane.setSpacing(20);
             titlePane.setAlignment(Pos.CENTER_LEFT);
             name.setStyle("-fx-font-size: 20px");
@@ -154,15 +160,15 @@ public class CoinViewController implements Initializable {
 
     private void reloadAfterChangingCurrency() {
         if (coinData != null) {
-            priceTop.setText(String.valueOf(coinData.getCurrentPrice()));
+            priceTop.setText(coinData.getCurrentPrice() + " " + currency);
             mktCapTop.setText(String.valueOf(coinData.getMarketCap()));
-            price.setText(String.valueOf(coinData.getCurrentPrice()));
+            price.setText(coinData.getCurrentPrice() + " " + currency);
             marketCap.setText(String.valueOf(coinData.getMarketCap()));
-            tradingVol.setText(String.valueOf(coinData.getTotalVolume()));
-            lowHigh24.setText(coinData.getLow24h() + " / " + coinData.getHigh24h());
+            tradingVol.setText(coinData.getTotalVolume() + " " + currency);
+            lowHigh24.setText(coinData.getLow24h() + " " + currency + " / " + coinData.getHigh24h() + " " + currency);
             mktCapRank.setText(String.valueOf(coinData.getMarketCapRank()));
-            allTimeLow.setText(String.valueOf(coinData.getAtl()));
-            allTimeHigh.setText(String.valueOf(coinData.getAth()));
+            allTimeLow.setText(coinData.getAtl() + " " + currency);
+            allTimeHigh.setText(coinData.getAth() + " " + currency);
         }
     }
 
@@ -207,6 +213,12 @@ public class CoinViewController implements Initializable {
         webView.getEngine().loadContent(Plots.toHtml(fig), "text/html");
     }
 
+    private void goBackToMainView(Event actionEvent) {
+        Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        primaryStage.setScene(secondScene);
+        readyScene = false;
+    }
+
     public void setCurrency(String currency) {
         this.currency = currency;
     }
@@ -223,6 +235,10 @@ public class CoinViewController implements Initializable {
 
     public void setUrlRedirectingFunc(Consumer<String> func) {
         this.redirectToUrl = func;
+    }
+
+    public void setSecondScene(Scene scene) {
+        this.secondScene = scene;
     }
 
 

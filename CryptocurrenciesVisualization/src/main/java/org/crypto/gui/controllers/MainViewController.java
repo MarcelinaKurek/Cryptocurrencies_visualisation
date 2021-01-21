@@ -3,10 +3,13 @@ package org.crypto.gui.controllers;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -14,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
 import org.crypto.gui.objects.*;
 import org.crypto.services.APIClient;
@@ -51,6 +55,7 @@ public class MainViewController implements Initializable {
     private List<String> currencies = null;
 
     private CoinViewController coinViewController = null;
+    private Scene thirdScene;
     private Scene secondScene;
     private String currency;
     private String coinId;
@@ -90,15 +95,19 @@ public class MainViewController implements Initializable {
         TextFields.bindAutoCompletion(textField, allCoinsNames);
 
         comboBox = new ComboBox<String>();
+        comboBox.getStyleClass().add("combo-box");
         comboBox.setVisibleRowCount(4);
         comboBox.getItems().addAll(currencies);
         comboBox.setValue("eur");
         comboBox.setOnAction(e -> {
             currency = comboBox.getValue();
+            ranking.setCurrency(currency);
             load();
             updateScene();
         });
-        hbox.getChildren().add(comboBox);
+        Button openDialog = new Button("Compare coins");
+        openDialog.setOnAction(this::diplayCompareView);
+        hbox.getChildren().addAll(comboBox, openDialog);
         hbox.setSpacing(150);
     }
 
@@ -142,15 +151,9 @@ public class MainViewController implements Initializable {
    public void displayCoin(Event actionEvent, String name) {
        Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-       Optional<String> id = allCoins
-               .entrySet()
-               .stream()
-               .filter(entry -> name.equals(entry.getValue()))
-               .map(Map.Entry::getKey)
-               .findFirst();
-
-       if (id.isPresent()) {
-           coinId = id.get();
+       String id = CommonFunctions.findIdByName(allCoins, name);
+       if (!id.equals("")) {
+           coinId = id;
            coinViewController.setCurrency(currency);
            coinViewController.setCoinId(coinId);
            coinViewController.updateScene();
@@ -158,8 +161,17 @@ public class MainViewController implements Initializable {
        }
    }
 
+   private void diplayCompareView(ActionEvent event) {
+       Stage primaryStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+       primaryStage.setScene(thirdScene);
+   }
+
    public void setSecondScene(Scene scene) {
         this.secondScene = scene;
+   }
+
+   public void setThirdScene(Scene scene) {
+       this.thirdScene = scene;
    }
 
    public void setCurrency(String currency) {

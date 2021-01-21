@@ -1,14 +1,12 @@
 package org.crypto.gui.objects;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class RankingTableView extends TableView<Coin> {
+    private String currency = "eur";
 
     public RankingTableView() {
         //brakuje atrybutu
@@ -41,6 +39,7 @@ public class RankingTableView extends TableView<Coin> {
             Button btnName = new Button();
             TableCell<Coin, String> cell = new TableCell<Coin, String>() {
                 public void updateItem(String name, boolean empty) {
+
                     super.updateItem(name, empty);
                     if (empty || name == null) {
                         setGraphic(null);
@@ -61,6 +60,26 @@ public class RankingTableView extends TableView<Coin> {
         rSymbol.getStyleClass().add("column-symbol");
 
         TableColumn<Coin, String> r24h = new TableColumn<>("24h");
+        r24h.setCellFactory(param -> {
+            TableCell<?, ?> cell = new TableCell<Coin, Double>() {
+                @Override
+                public void updateItem(Double priceChangePercentage24h, boolean empty) {
+                    super.updateItem(priceChangePercentage24h, empty);
+                    if (empty || priceChangePercentage24h == null) {
+                        setGraphic(null);
+                    } else  {
+                        setText(priceChangePercentage24h + " %");
+                        if (priceChangePercentage24h < 0) {
+                            setStyle("-fx-text-fill: red");
+                        }
+                        else {
+                            setStyle("-fx-text-fill: green");
+                        }
+                    }
+                }
+            };
+            return (TableCell<Coin, String>) cell;
+        });
         r24h.setCellValueFactory(new PropertyValueFactory<>("priceChangePercentage24h"));
         r24h.getStyleClass().add("right-column");
 
@@ -68,10 +87,38 @@ public class RankingTableView extends TableView<Coin> {
 //        rSymbol.setCellValueFactory(new PropertyValueFactory<>("_24hVolume"));
 
         TableColumn<Coin, String> rMktCap = new TableColumn<>("Mkt Cap");
+        rMktCap.setCellFactory(param -> {
+            TableCell<?, ?> cell = new TableCell<Coin, Integer>() {
+                @Override
+                public void updateItem(Integer marketCap, boolean empty) {
+                    super.updateItem(marketCap, empty);
+                    if (empty || marketCap == null) {
+                        setGraphic(null);
+                    } else  {
+                        setText(marketCap + " " + currency);
+                    }
+                }
+            };
+            return (TableCell<Coin, String>) cell;
+        });
         rMktCap.setCellValueFactory(new PropertyValueFactory<>("marketCap"));
         rMktCap.getStyleClass().add("right-column");
 
         TableColumn<Coin, String> rPrice = new TableColumn<>("Price");
+        rPrice.setCellFactory(param -> {
+            TableCell<?, ?> cell = new TableCell<Coin, Double>() {
+                @Override
+                public void updateItem(Double currentPrice, boolean empty) {
+                    super.updateItem(currentPrice, empty);
+                    if (empty || currentPrice == null) {
+                        setGraphic(null);
+                    } else  {
+                        setText(currentPrice + " " + currency);
+                    }
+                }
+            };
+            return (TableCell<Coin, String>) cell;
+        });
         rPrice.setCellValueFactory(new PropertyValueFactory<>("currentPrice"));
         rPrice.getStyleClass().add("right-column");
 
@@ -89,5 +136,9 @@ public class RankingTableView extends TableView<Coin> {
                     this.widthProperty().multiply(widths[i] / sum));
 
         }
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }
