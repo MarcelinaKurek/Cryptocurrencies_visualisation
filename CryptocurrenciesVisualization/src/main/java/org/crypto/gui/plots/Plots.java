@@ -9,6 +9,7 @@ import tech.tablesaw.plotly.components.change.Increasing;
 import tech.tablesaw.plotly.traces.ScatterTrace;
 import tech.tablesaw.plotly.traces.Trace;
 
+import static tech.tablesaw.aggregate.AggregateFunctions.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
