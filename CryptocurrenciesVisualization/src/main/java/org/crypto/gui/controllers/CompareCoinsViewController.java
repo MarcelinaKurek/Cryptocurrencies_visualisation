@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
@@ -29,6 +30,8 @@ public class CompareCoinsViewController implements Initializable {
     @FXML
     private VBox vBoxComparison;
     @FXML
+    private HBox hBox;
+    @FXML
     private GridPane gridPane;
     @FXML
     private Label title;
@@ -40,8 +43,6 @@ public class CompareCoinsViewController implements Initializable {
     private Button submitBtn;
     @FXML
     private Button backToMain;
-    @FXML
-    private ComboBox<String> comboBox1;
     @FXML
     private ImageView c1Logo;
     @FXML
@@ -137,21 +138,23 @@ public class CompareCoinsViewController implements Initializable {
         cTitle.setVisible(false);
         cTitle.setStyle("-fx-font-weight: bold");
 
-
-        comboBox1 = new ComboBox<String>();
-        //comboBox.setVisibleRowCount(4);
-        comboBox1.getItems().addAll(currencies);
-        //comboBox.setValue("eur");
-        comboBox1.setOnAction(e -> {
-            currency = comboBox1.getValue();
+        ComboBox<String> comboBox = new ComboBox<String>();
+        comboBox.getItems().addAll(currencies);
+        comboBox.setValue("eur");
+        hBox.getChildren().add(comboBox);
+        comboBox.setVisibleRowCount(4);
+        comboBox.setOnAction(e -> {
+            currency = comboBox.getValue();
             loadData(textField1.getText(), textField2.getText());
             loadTable();
         });
 
         submitBtn.setOnAction(e -> {
-            loadData(textField1.getText(), textField2.getText());
-            loadTable();
-            loadComparisonColumn();
+            if (allCoins.containsValue(textField1.getText()) && allCoins.containsValue((textField2.getText()))) {
+                loadData(textField1.getText(), textField2.getText());
+                loadTable();
+                loadComparisonColumn();
+            }
         });
 
         c1Name.setOnAction(e -> displayCoin(e, textField1.getText()));
@@ -197,35 +200,35 @@ public class CompareCoinsViewController implements Initializable {
     private void loadComparisonColumn() {
         cTitle.setVisible(true);
         Double priceDiff = (coin1Data.getCurrentPrice() / coin2Data.getCurrentPrice()) * 100;
-        long tradingVolDiff = (coin1Data.getTotalVolume() / coin2Data.getTotalVolume()) * 100;
         cPrice.setText(priceDiff + "%");
         cMktCap.setText(String.valueOf(coin1Data.getMarketCap() - coin2Data.getMarketCap()));
         cMktCapDom.setText("g");
         if (coin1Data.getHigh24h() != null && coin2Data.getHigh24h() != null) {
             cHigh24.setText((coin1Data.getHigh24h() / coin2Data.getHigh24h()) * 100 + "%");
-        }
-        else {
+        } else {
             cHigh24.setText("-");
         }
         if (coin1Data.getLow24h() != null && coin2Data.getLow24h() != null) {
             cLow24.setText((coin1Data.getLow24h() / coin2Data.getLow24h()) * 100 + "%");
-        }
-        else {
+        } else {
             cLow24.setText("-");
         }
 
-        cTradVol.setText(tradingVolDiff + "%");
+        if (coin2Data.getTotalVolume() != 0) {
+            long tradingVolDiff = (coin1Data.getTotalVolume() / coin2Data.getTotalVolume()) * 100;
+            cTradVol.setText(tradingVolDiff + "%");
+        } else {
+            cTradVol.setText("-");
+        }
         cMktCapRank.setText(String.valueOf(coin1Data.getMarketCapRank() - coin2Data.getMarketCapRank()));
         if (coin1Data.getAth() != null && coin2Data.getAth() != null) {
             cATH.setText((coin1Data.getAth() / coin2Data.getAth()) * 100 + "%");
-        }
-        else {
+        } else {
             cATH.setText("-");
         }
         if (coin1Data.getAtl() != null && coin2Data.getAtl() != null) {
             cATL.setText((coin1Data.getAtl() / coin2Data.getAtl()) * 100 + "%");
-        }
-        else {
+        } else {
             cATL.setText("-");
         }
     }

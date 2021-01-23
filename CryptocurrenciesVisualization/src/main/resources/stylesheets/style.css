@@ -18,19 +18,20 @@
     -fx-font-weight: bold;
 }
 
-.root #okBtn {
+.root .button-top {
     /*-fx-min-height: 40px;*/
     /*-fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-size: cover;*/
-    -fx-background-color: #00e676;
-    -fx-border-style: none;
-    -fx-min-height: 40px;
+    -fx-background-size: cover;
+
 
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-background-color: #00e676; */
+    -fx-border-style: none;
+    -fx-min-height: 40px;
 
     -fx-background-insets: 0 0 0 0;
 }
@@ -170,7 +171,7 @@ input {
 
 .combo-box {
     -fx-min-width: 40px;
-    -fx-min-height: 40px;
+    -fx-max-height: 40px;
     -fx-background-color: lightgray;
     -fx-background-radius: 5px;
 

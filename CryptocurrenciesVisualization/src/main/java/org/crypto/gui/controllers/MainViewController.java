@@ -8,6 +8,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,9 +38,6 @@ public class MainViewController implements Initializable {
 
     @FXML
     private TextField textField;
-
-
-    private Button okBtn = new Button();
     @FXML
     private HBox hbox;
 
@@ -73,7 +71,6 @@ public class MainViewController implements Initializable {
                 displayCoin(e, textField.getText());
             }
         });
-        okBtn.setOnAction(e -> displayCoin(e, textField.getText()));
 
         trending = new TrendingTableView();
         ranking = new RankingTableView();
@@ -106,8 +103,15 @@ public class MainViewController implements Initializable {
             updateScene();
         });
         Button openDialog = new Button("Compare coins");
+        openDialog.getStyleClass().add("button-top");
         openDialog.setOnAction(this::diplayCompareView);
-        hbox.getChildren().addAll(comboBox, openDialog);
+        Button goToCoinView = new Button("Submit");
+        goToCoinView.getStyleClass().add("button-top");
+        goToCoinView.setOnAction(e -> displayCoin(e, textField.getText()));
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().addAll(goToCoinView,openDialog, comboBox);
+        hbox.getChildren().addAll(hBox);
         hbox.setSpacing(150);
     }
 

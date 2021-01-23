@@ -20,7 +20,6 @@
             <TextField fx:id="textField2" promptText="type second coin name" />
             <Button fx:id="submitBtn" styleClass="top-button" mnemonicParsing="false" text="Submit" />
             <Button fx:id="backToMain" styleClass="top-button" mnemonicParsing="false" text="Go to Main View" />
-            <ComboBox fx:id="comboBox1" styleClass="combo-box" prefWidth="150.0" />
          </children>
       </HBox>
       <GridPane fx:id="gridPane">

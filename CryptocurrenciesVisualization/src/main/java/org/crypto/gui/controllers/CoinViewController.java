@@ -24,6 +24,7 @@ import javafx.scene.web.*;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CoinViewController implements Initializable {
@@ -87,12 +88,6 @@ public class CoinViewController implements Initializable {
         webView.setMaxSize(800, 600);
     }
 
-//    public CoinViewController(String currency, String coinId) {
-//        this.currency = currency;
-//        this.coinId = coinId;
-//        webView.setMaxSize(800, 600);
-//    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -107,7 +102,7 @@ public class CoinViewController implements Initializable {
 
     public void prepareScene() {
         if (coinData != null) {
-            System.out.println(coinData.toString());
+            updateFig();
             readyScene = true;
             logo.setImage(new Image(coinData.getImageLargeUrl()));
             name.setText(coinData.getName());
@@ -120,10 +115,11 @@ public class CoinViewController implements Initializable {
                 event.consume();
             });
 
-            currencyTop.getItems().addAll(currencies);
-            currencyTop.setValue(currency);
+            List<String> currenciesUpper = currencies.stream().map(String::toUpperCase).collect(Collectors.toList());
+            currencyTop.getItems().addAll(currenciesUpper);
+            currencyTop.setValue(currency.toUpperCase());
             currencyTop.setOnAction(e -> {
-                currency = currencyTop.getValue();
+                currency = currencyTop.getValue().toLowerCase();
                 updateScene();
                 updateFig();
             });
@@ -160,15 +156,16 @@ public class CoinViewController implements Initializable {
 
     private void reloadAfterChangingCurrency() {
         if (coinData != null) {
-            priceTop.setText(coinData.getCurrentPrice() + " " + currency);
+            String upperCurrency = currency.toUpperCase();
+            priceTop.setText(coinData.getCurrentPrice() + " " + upperCurrency);
             mktCapTop.setText(String.valueOf(coinData.getMarketCap()));
-            price.setText(coinData.getCurrentPrice() + " " + currency);
-            marketCap.setText(String.valueOf(coinData.getMarketCap()));
-            tradingVol.setText(coinData.getTotalVolume() + " " + currency);
-            lowHigh24.setText(coinData.getLow24h() + " " + currency + " / " + coinData.getHigh24h() + " " + currency);
+            price.setText(coinData.getCurrentPrice() + " " + upperCurrency);
+            marketCap.setText(coinData.getMarketCap() + upperCurrency);
+            tradingVol.setText(coinData.getTotalVolume() + " " + upperCurrency);
+            lowHigh24.setText(coinData.getLow24h() + " " + upperCurrency + " / " + coinData.getHigh24h() + " " + upperCurrency);
             mktCapRank.setText(String.valueOf(coinData.getMarketCapRank()));
-            allTimeLow.setText(coinData.getAtl() + " " + currency);
-            allTimeHigh.setText(coinData.getAth() + " " + currency);
+            allTimeLow.setText(coinData.getAtl() + " " + upperCurrency);
+            allTimeHigh.setText(coinData.getAth() + " " + upperCurrency);
         }
     }
 

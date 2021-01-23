@@ -17,7 +17,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Figure fig = Plots.CandleStickPlot("bitcoin", "usd", 7);
 
         MainViewController mainViewController = new MainViewController("eur");
         CoinViewController coinViewController = new CoinViewController();
@@ -39,7 +38,7 @@ public class App extends Application {
         thirdLoader.setController(compareCoinsViewController);
         Parent thirdPane = thirdLoader.load();
         thirdPane.getStylesheets().add(String.valueOf(getClass().getResource("/stylesheets/style.css")));
-        Scene thirdScene = new Scene(thirdPane, 1200, 900);
+        Scene thirdScene = new Scene(thirdPane, 1200, 500);
 
         mainViewController.setCoinViewController(coinViewController);
         mainViewController.setSecondScene(secondScene);
@@ -48,7 +47,6 @@ public class App extends Application {
         Consumer<String> redirectToUrl = (url) -> getHostServices().showDocument(url);
 
         coinViewController.setUrlRedirectingFunc(redirectToUrl);
-        coinViewController.setFig(fig);
         coinViewController.setSecondScene(firstScene);
 
         compareCoinsViewController.setSecondScene(firstScene);
