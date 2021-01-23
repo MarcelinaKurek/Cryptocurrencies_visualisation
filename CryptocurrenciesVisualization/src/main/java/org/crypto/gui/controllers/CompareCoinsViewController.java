@@ -220,7 +220,13 @@ public class CompareCoinsViewController implements Initializable {
         } else {
             cTradVol.setText("-");
         }
-        cMktCapRank.setText(String.valueOf(coin1Data.getMarketCapRank() - coin2Data.getMarketCapRank()));
+        cTradVol.setText(tradingVolDiff + "%");
+
+        if (coin1Data.getMarketCapRank().equals("-") || coin2Data.getMarketCapRank().equals("-")) {
+            cMktCapRank.setText("-");
+        } else {
+            cMktCapRank.setText(String.valueOf(Math.abs(Integer.parseInt(coin1Data.getMarketCapRank()) - Integer.parseInt(coin2Data.getMarketCapRank()))));
+        }
         if (coin1Data.getAth() != null && coin2Data.getAth() != null) {
             cATH.setText((coin1Data.getAth() / coin2Data.getAth()) * 100 + "%");
         } else {

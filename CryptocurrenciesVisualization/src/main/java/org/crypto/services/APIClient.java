@@ -124,9 +124,13 @@ public class APIClient {
                     coinObj.getString("name"),
                     coinObj.getString("symbol"),
                     coinObj.getString("thumb"),
-                    coinObj.getInt("market_cap_rank"));
+                    String.valueOf(coinObj.getInt("market_cap_rank")));
 
             coin.setScore(coinObj.getInt("score"));
+
+            if (coin.getMarketCapRank() == -1) {
+                coin.setMarketCapRank("-");
+            }
 
             trending.add(coin);
         }
@@ -162,11 +166,13 @@ public class APIClient {
                     obj.getString("name"),
                     obj.getString("symbol"),
                     imageUrl,
-                    obj.getInt("market_cap_rank"));
+                    String.valueOf(obj.getInt("market_cap_rank")));
 
             coin.setCurrentPrice(obj.getDouble("current_price"));
-            coin.setMarketCap(obj.getInt("market_cap"));
+            coin.setMarketCap(obj.getLong("market_cap"));
             coin.setPriceChangePercentage24h(obj.getDouble("price_change_percentage_24h"));
+
+            if (coin.getMarketCapRank() == -1) coin.setMarketCapRank("-");
 
             coins.add(coin);
         }
@@ -274,8 +280,8 @@ public class APIClient {
         TableData tbl = new TableData(id);
         JSONObject marketData = obj.getJSONObject("market_data");
 
-        if (obj.isNull("market_cap_rank")) tbl.setMarketCapRank(-1);
-        else tbl.setMarketCapRank(obj.getInt("market_cap_rank"));
+        if (obj.isNull("market_cap_rank")) tbl.setMarketCapRank("-");
+        else tbl.setMarketCapRank(String.valueOf(obj.getInt("market_cap_rank")));
 
         if (marketData.getJSONObject("current_price").isEmpty()) tbl.setCurrentPrice(null);
         else tbl.setCurrentPrice(marketData.getJSONObject("current_price").getDouble(currency));

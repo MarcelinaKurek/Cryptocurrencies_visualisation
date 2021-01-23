@@ -162,10 +162,15 @@ public class CoinViewController implements Initializable {
             price.setText(coinData.getCurrentPrice() + " " + upperCurrency);
             marketCap.setText(coinData.getMarketCap() + upperCurrency);
             tradingVol.setText(coinData.getTotalVolume() + " " + upperCurrency);
-            lowHigh24.setText(coinData.getLow24h() + " " + upperCurrency + " / " + coinData.getHigh24h() + " " + upperCurrency);
             mktCapRank.setText(String.valueOf(coinData.getMarketCapRank()));
             allTimeLow.setText(coinData.getAtl() + " " + upperCurrency);
             allTimeHigh.setText(coinData.getAth() + " " + upperCurrency);
+
+            if (coinData.getLow24h() == null || coinData.getHigh24h() == null) {
+                lowHigh24.setText(" - / -");
+            } else {
+                lowHigh24.setText(coinData.getLow24h() + " " + upperCurrency + " / " + coinData.getHigh24h() + " " + upperCurrency 
+            }
         }
     }
 
