@@ -36,7 +36,7 @@ public class CommonFunctions {
     public static void displayCoin(Event actionEvent, String name, Map<String, String> allCoins, CoinViewController coinViewController, String currency, Scene scene) {
         Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-        String id = CommonFunctions.findIdByName(allCoins, name);
+        String id = findIdByName(allCoins, name);
         if (!id.equals("")) {
             coinViewController.setCurrency(currency);
             coinViewController.setCoinId(id);
