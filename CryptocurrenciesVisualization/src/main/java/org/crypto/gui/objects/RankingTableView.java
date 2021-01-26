@@ -9,7 +9,6 @@ public class RankingTableView extends TableView<Coin> {
     private String currency = "eur";
 
     public RankingTableView() {
-        //brakuje atrybutu
         TableColumn<Coin, String> rScore = new TableColumn<>("#");
         rScore.setCellValueFactory(new PropertyValueFactory<>("marketCapRank"));
         rScore.getStyleClass().add("table-column-short");
@@ -83,10 +82,7 @@ public class RankingTableView extends TableView<Coin> {
         r24h.setCellValueFactory(new PropertyValueFactory<>("priceChangePercentage24h"));
         r24h.getStyleClass().add("right-column");
 
-//        TableColumn<Coin, String> r24hVolume = new TableColumn<>("24h Volume");
-//        rSymbol.setCellValueFactory(new PropertyValueFactory<>("_24hVolume"));
-
-        TableColumn<Coin, String> rMktCap = new TableColumn<>("Mkt Cap");
+        TableColumn<Coin, String> rMktCap = new TableColumn<>("Mkt Cap  ");
         rMktCap.setCellFactory(param -> {
             TableCell<?, ?> cell = new TableCell<Coin, Long>() {
                 @Override
@@ -95,7 +91,7 @@ public class RankingTableView extends TableView<Coin> {
                     if (empty || marketCap == null) {
                         setGraphic(null);
                     } else  {
-                        setText(marketCap + " " + currency);
+                        setText(marketCap + " " + currency.toUpperCase() + "  ");
                     }
                 }
             };
@@ -113,7 +109,7 @@ public class RankingTableView extends TableView<Coin> {
                     if (empty || currentPrice == null) {
                         setGraphic(null);
                     } else  {
-                        setText(currentPrice + " " + currency);
+                        setText(currentPrice + " " + currency.toUpperCase());
                     }
                 }
             };
@@ -124,18 +120,17 @@ public class RankingTableView extends TableView<Coin> {
 
         this.getColumns().addAll(rScore, rLogo, rCoin, rSymbol, rPrice, r24h, rMktCap);
 
-        double[] widths = {40, 30, 200, 120, 80, 80, 150};
+        double[] widths = {40, 30, 140, 90, 120, 70, 200};
         double sum = 0;
         for (double i : widths) {
             sum += i;
         }
-        this.setMinWidth(sum);
-        this.setMaxWidth(sum);
         for (int i = 0; i < widths.length; i++) {
             this.getColumns().get(i).prefWidthProperty().bind(
                     this.widthProperty().multiply(widths[i] / sum));
 
         }
+        this.setMinWidth(sum + 20);
     }
 
     public void setCurrency(String currency) {

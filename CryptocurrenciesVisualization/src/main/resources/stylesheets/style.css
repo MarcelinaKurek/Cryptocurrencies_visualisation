@@ -68,7 +68,7 @@
 
 .root #gridPane {
     -fx-padding: 40px;
-    -fx-hgap: 15px;
+    -fx-hgap: 30px;
 }
 
 .table-view {

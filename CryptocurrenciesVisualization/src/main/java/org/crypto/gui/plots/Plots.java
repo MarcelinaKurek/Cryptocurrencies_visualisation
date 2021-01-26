@@ -10,8 +10,6 @@ import tech.tablesaw.plotly.traces.ScatterTrace;
 import tech.tablesaw.plotly.traces.Trace;
 
 import static tech.tablesaw.aggregate.AggregateFunctions.*;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -176,12 +174,5 @@ public class Plots {
                 .build();
 
         return new Figure(layout, trace);
-    }
-
-
-    public static String formatNumber(long n){
-        NumberFormat numFormat;
-        numFormat = new DecimalFormat("0.####E0");
-        return numFormat.format(n).replace("E", " x 10^");
     }
 }

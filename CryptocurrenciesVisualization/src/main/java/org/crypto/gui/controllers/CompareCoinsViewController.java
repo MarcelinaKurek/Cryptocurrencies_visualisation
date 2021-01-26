@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import static org.crypto.gui.controllers.CommonFunctions.displayCoin;
 
 public class CompareCoinsViewController implements Initializable {
 
@@ -52,8 +55,6 @@ public class CompareCoinsViewController implements Initializable {
     @FXML
     private Label c1MktCap;
     @FXML
-    private Label c1MktCapDom;
-    @FXML
     private Label c1TradVol;
     @FXML
     private Label c1Low24;
@@ -74,8 +75,6 @@ public class CompareCoinsViewController implements Initializable {
     @FXML
     private Label c2MktCap;
     @FXML
-    private Label c2MktCapDom;
-    @FXML
     private Label c2TradVol;
     @FXML
     private Label c2Low24;
@@ -91,8 +90,6 @@ public class CompareCoinsViewController implements Initializable {
     private Label cPrice;
     @FXML
     private Label cMktCap;
-    @FXML
-    private Label cMktCapDom;
     @FXML
     private Label cTradVol;
     @FXML
@@ -113,7 +110,6 @@ public class CompareCoinsViewController implements Initializable {
     private CoinViewController coinViewController;
 
     private Map<String, String> allCoins;
-    private List<String> currencies = null;
     private String currency = "eur";
     private TableData coin1Data;
     private TableData coin2Data;
@@ -128,26 +124,28 @@ public class CompareCoinsViewController implements Initializable {
             }
         });
         allCoins = APIClient.getCoinList();
-        currencies = APIClient.getSupportedCurrencies();
+        List<String> currencies = APIClient.getSupportedCurrencies();
 
         List<String> allCoinsNames = new ArrayList<>(allCoins.values());
         TextFields.bindAutoCompletion(textField1, allCoinsNames);
         TextFields.bindAutoCompletion(textField2, allCoinsNames);
+
         c1Name.setVisible(false);
         c2Name.setVisible(false);
         cTitle.setVisible(false);
         cTitle.setStyle("-fx-font-weight: bold");
 
+        List<String> currenciesUpper = currencies.stream().map(String::toUpperCase).collect(Collectors.toList());
         ComboBox<String> comboBox = new ComboBox<String>();
-        comboBox.getItems().addAll(currencies);
-        comboBox.setValue("eur");
-        hBox.getChildren().add(comboBox);
+        comboBox.getItems().addAll(currenciesUpper);
+        comboBox.setValue("EUR");
         comboBox.setVisibleRowCount(4);
         comboBox.setOnAction(e -> {
-            currency = comboBox.getValue();
+            currency = comboBox.getValue().toLowerCase();
             loadData(textField1.getText(), textField2.getText());
             loadTable();
         });
+        hBox.getChildren().add(comboBox);
 
         submitBtn.setOnAction(e -> {
             if (allCoins.containsValue(textField1.getText()) && allCoins.containsValue((textField2.getText()))) {
@@ -157,8 +155,8 @@ public class CompareCoinsViewController implements Initializable {
             }
         });
 
-        c1Name.setOnAction(e -> displayCoin(e, textField1.getText()));
-        c2Name.setOnAction(e -> displayCoin(e, textField2.getText()));
+        c1Name.setOnAction(e -> displayCoinView(e, textField1.getText()));
+        c2Name.setOnAction(e -> displayCoinView(e, textField2.getText()));
 
         backToMain.setOnAction(this::goBackToMainView);
     }
@@ -171,56 +169,77 @@ public class CompareCoinsViewController implements Initializable {
         this.coin2Data = APIClient.getTableData(id2, currency);
     }
 
+    /**
+     * Funkcja przypisuje dane z obiektów TableData do kolumn tabeli
+     * */
     private void loadTable() {
+        String upperCurrency = currency.toUpperCase();
         c1Logo.setImage(new Image(coin1Data.getImageSmallUrl()));
         c1Name.setText(coin1Data.getName());
         c1Name.setVisible(true);
-        c1Price.setText(coin1Data.getCurrentPrice() + " " + currency);
-        c1MktCap.setText(coin1Data.getMarketCap() + " " + currency);
-        c1TradVol.setText(coin1Data.getTotalVolume() + " " + currency);
-        c1Low24.setText(coin1Data.getLow24h() + " " + currency);
-        c1High24.setText(coin1Data.getHigh24h() + " " + currency);
+        c1Price.setText(coin1Data.getCurrentPrice() + " " + upperCurrency);
+        c1MktCap.setText(coin1Data.getMarketCap() + " " + upperCurrency);
+        c1TradVol.setText(coin1Data.getTotalVolume() + " " + upperCurrency);
+        if (coin1Data.getLow24h() != null) {
+            c1Low24.setText(coin1Data.getLow24h() + " " + upperCurrency);
+        } else {
+            c1Low24.setText("-");
+        }
+        if (coin1Data.getHigh24h() != null) {
+            c1High24.setText(coin1Data.getHigh24h() + " " + upperCurrency);
+        } else {
+            c1High24.setText("-");
+        }
         c1MktCapRank.setText(String.valueOf(coin1Data.getMarketCapRank()));
-        c1ATH.setText(coin1Data.getAth() + " " + currency);
-        c1ATL.setText(coin1Data.getAtl() + " " + currency);
+        c1ATH.setText(coin1Data.getAth() + " " + upperCurrency);
+        c1ATL.setText(coin1Data.getAtl() + " " + upperCurrency);
 
         c2Logo.setImage(new Image(coin2Data.getImageSmallUrl()));
         c2Name.setText(coin2Data.getName());
         c2Name.setVisible(true);
-        c2Price.setText(coin2Data.getCurrentPrice() + " " + currency);
-        c2MktCap.setText(coin2Data.getMarketCap() + " " + currency);
-        c2TradVol.setText(coin2Data.getTotalVolume() + " " + currency);
-        c2Low24.setText(coin2Data.getLow24h() + " " + currency);
-        c2High24.setText(coin2Data.getHigh24h() + " " + currency);
+        c2Price.setText(coin2Data.getCurrentPrice() + " " + upperCurrency);
+        c2MktCap.setText(coin2Data.getMarketCap() + " " + upperCurrency);
+        c2TradVol.setText(coin2Data.getTotalVolume() + " " + upperCurrency);
+        if (coin2Data.getLow24h() != null) {
+            c2Low24.setText(coin2Data.getLow24h() + " " + upperCurrency);
+        } else {
+            c2Low24.setText("-");
+        }
+        if (coin2Data.getHigh24h() != null) {
+            c2High24.setText(coin2Data.getHigh24h() + " " + upperCurrency);
+        } else {
+            c2High24.setText("-");
+        }
         c2MktCapRank.setText(String.valueOf(coin2Data.getMarketCapRank()));
-        c2ATH.setText(coin2Data.getAth() + " " + currency);
-        c2ATL.setText(coin2Data.getAtl() + " " + currency);
+        c2ATH.setText(coin2Data.getAth() + " " + upperCurrency);
+        c2ATL.setText(coin2Data.getAtl() + " " + upperCurrency);
     }
 
+    /**
+     * Funkcja porównuje wartości między sobą i wpisuje porównanie do kolumny Comparison
+     * */
     private void loadComparisonColumn() {
         cTitle.setVisible(true);
-        Double priceDiff = (coin1Data.getCurrentPrice() / coin2Data.getCurrentPrice()) * 100;
-        cPrice.setText(priceDiff + "%");
+        long priceDiff = (long) ((coin1Data.getCurrentPrice() / coin2Data.getCurrentPrice()) * 100);
+        cPrice.setText(CommonFunctions.formatNumber(priceDiff) + " %");
         cMktCap.setText(String.valueOf(coin1Data.getMarketCap() - coin2Data.getMarketCap()));
-        cMktCapDom.setText("g");
         if (coin1Data.getHigh24h() != null && coin2Data.getHigh24h() != null) {
-            cHigh24.setText((coin1Data.getHigh24h() / coin2Data.getHigh24h()) * 100 + "%");
+            cHigh24.setText(CommonFunctions.formatNumber(coin1Data.getHigh24h() / coin2Data.getHigh24h() * 100) + " %");
         } else {
             cHigh24.setText("-");
         }
         if (coin1Data.getLow24h() != null && coin2Data.getLow24h() != null) {
-            cLow24.setText((coin1Data.getLow24h() / coin2Data.getLow24h()) * 100 + "%");
+            cLow24.setText(CommonFunctions.formatNumber(coin1Data.getLow24h() / coin2Data.getLow24h() * 100) + " %");
         } else {
             cLow24.setText("-");
         }
 
         if (coin2Data.getTotalVolume() != 0) {
-            long tradingVolDiff = (coin1Data.getTotalVolume() / coin2Data.getTotalVolume()) * 100;
-            cTradVol.setText(tradingVolDiff + "%");
+            double tradingVolDiff = (coin1Data.getTotalVolume() * 1.0 / coin2Data.getTotalVolume() * 1.0) * 100;
+            cTradVol.setText(CommonFunctions.formatNumber(tradingVolDiff) + " %");
         } else {
             cTradVol.setText("-");
         }
-        cTradVol.setText(tradingVolDiff + "%");
 
         if (coin1Data.getMarketCapRank().equals("-") || coin2Data.getMarketCapRank().equals("-")) {
             cMktCapRank.setText("-");
@@ -228,12 +247,13 @@ public class CompareCoinsViewController implements Initializable {
             cMktCapRank.setText(String.valueOf(Math.abs(Integer.parseInt(coin1Data.getMarketCapRank()) - Integer.parseInt(coin2Data.getMarketCapRank()))));
         }
         if (coin1Data.getAth() != null && coin2Data.getAth() != null) {
-            cATH.setText((coin1Data.getAth() / coin2Data.getAth()) * 100 + "%");
+
+            cATH.setText(CommonFunctions.formatNumber((coin1Data.getAth() / coin2Data.getAth()) * 100) + " %");
         } else {
             cATH.setText("-");
         }
         if (coin1Data.getAtl() != null && coin2Data.getAtl() != null) {
-            cATL.setText((coin1Data.getAtl() / coin2Data.getAtl()) * 100 + "%");
+            cATL.setText(CommonFunctions.formatNumber((coin1Data.getAtl() / coin2Data.getAtl() * 100))+ " %");
         } else {
             cATL.setText("-");
         }
@@ -244,22 +264,16 @@ public class CompareCoinsViewController implements Initializable {
         primaryStage.setScene(secondScene);
     }
 
-    public void setSecondScene(Scene scene) { this.secondScene = scene; }
+    private void displayCoinView(Event actionEvent, String name) {
+        displayCoin(actionEvent, name, allCoins, coinViewController, currency, thirdScene);
+    }
+
+    public void setSecondScene(Scene scene) {
+        this.secondScene = scene;
+    }
 
     public void setThirdScene(Scene scene) {
         this.thirdScene = scene;
-    }
-
-    private void displayCoin(Event actionEvent, String name) {
-        Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
-        String id = CommonFunctions.findIdByName(allCoins, name);
-        if (!id.equals("")) {
-            coinViewController.setCurrency(currency);
-            coinViewController.setCoinId(id);
-            coinViewController.updateScene();
-            primaryStage.setScene(thirdScene);
-        }
     }
 
     public void setCoinViewController(CoinViewController coinViewController) {

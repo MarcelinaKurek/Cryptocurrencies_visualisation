@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
@@ -14,7 +15,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
 <BorderPane fx:id="coinViewBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Canvas fx:id="chart" height="231.0" width="444.0" BorderPane.alignment="CENTER" />
@@ -28,7 +28,6 @@
         <rowConstraints>
           <RowConstraints maxHeight="90.0" minHeight="0.0" prefHeight="57.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="242.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="192.0" minHeight="1.0" prefHeight="53.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="242.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="242.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="242.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
@@ -38,28 +37,26 @@
          <children>
             <Label styleClass="left-col-label" text="Price" />
             <Label fx:id="price" text="Label" GridPane.columnIndex="1" />
-            <Label styleClass="left-col-label" text="Market Cap Dominance" GridPane.rowIndex="2" />
-            <Label fx:id="marketCapDom" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label styleClass="left-col-label" text="24h Low / 24h High" GridPane.rowIndex="4" />
+            <Label styleClass="left-col-label" text="24h Low / 24h High" GridPane.rowIndex="3" />
             <Label styleClass="left-col-label" text="Market Cap" GridPane.rowIndex="1" />
             <Label fx:id="marketCap" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label styleClass="left-col-label" text="Trading Volume" GridPane.rowIndex="3" />
-            <Label fx:id="tradingVol" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="lowHigh24" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label styleClass="left-col-label" text="Market Cap Rank" GridPane.rowIndex="5" />
-            <Label fx:id="mktCapRank" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="All-Time-High" GridPane.rowIndex="6">
+            <Label styleClass="left-col-label" text="Trading Volume" GridPane.rowIndex="2" />
+            <Label fx:id="tradingVol" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="lowHigh24" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label styleClass="left-col-label" text="Market Cap Rank" GridPane.rowIndex="4" />
+            <Label fx:id="mktCapRank" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="All-Time-High" GridPane.rowIndex="5">
                <styleClass>
                   <String fx:value="left-col-label" />
                   <String fx:value="cell" />
                </styleClass></Label>
-            <Label fx:id="allTimeHigh" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label text="All-Time-Low" GridPane.rowIndex="7">
+            <Label fx:id="allTimeHigh" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="All-Time-Low" GridPane.rowIndex="6">
                <styleClass>
                   <String fx:value="left-col-label" />
                   <String fx:value="cell" />
                </styleClass></Label>
-            <Label fx:id="allTimeLow" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="allTimeLow" styleClass="cell" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </right>
@@ -91,7 +88,7 @@
                   <Label text="Currency" GridPane.rowIndex="2" />
                   <Label fx:id="mktCapTop" styleClass="label-top-content" text="Label" GridPane.columnIndex="1" />
                   <Hyperlink fx:id="websiteTop" styleClass="label-top-content" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="currencyTop" styleClass="combo-box" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="currencyTop" prefHeight="25.0" prefWidth="100.0" styleClass="combo-box" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

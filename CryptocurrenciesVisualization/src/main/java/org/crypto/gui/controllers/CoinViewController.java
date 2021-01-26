@@ -54,8 +54,6 @@ public class CoinViewController implements Initializable {
     @FXML
     private Label mktCapTop;
     @FXML
-    private Label marketCapDom;
-    @FXML
     private Label tradingVol;
     @FXML
     private Label lowHigh24;
@@ -69,10 +67,10 @@ public class CoinViewController implements Initializable {
     private ComboBox<String> currencyTop;
 
     private Figure fig;
-    private WebView webView = new WebView();
+    private final WebView webView = new WebView();
     private Scene secondScene = null;
 
-    private List<String> currencies;
+    private final List<String> currencies;
 
     private String currency;
     private String coinId;
@@ -91,7 +89,7 @@ public class CoinViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Stream.of(price, marketCap, marketCapDom, mktCapRank, lowHigh24, allTimeHigh, allTimeLow, tradingVol)
+        Stream.of(price, marketCap, mktCapRank, lowHigh24, allTimeHigh, allTimeLow, tradingVol)
                 .forEach(e -> e.getStyleClass().add("table-element-content"));
         gridPaneTable.setGridLinesVisible(false);
         gridPaneTable.setAlignment(Pos.CENTER_LEFT);
@@ -100,7 +98,9 @@ public class CoinViewController implements Initializable {
         gridPaneTable.getColumnConstraints().forEach(col -> col.setMinWidth(150));
     }
 
-    public void prepareScene() {
+    /**
+     * Funkcja przygotowuje i wczytuje elementy z aktualnego coinData*/
+    private void prepareScene() {
         if (coinData != null) {
             updateFig();
             readyScene = true;
@@ -145,22 +145,13 @@ public class CoinViewController implements Initializable {
         }
     }
 
-    public void updateScene() {
-        coinData = APIClient.getTableData(coinId, currency);
-        if (readyScene) {
-            reloadAfterChangingCurrency();
-        } else {
-            prepareScene();
-        }
-    }
-
     private void reloadAfterChangingCurrency() {
         if (coinData != null) {
             String upperCurrency = currency.toUpperCase();
             priceTop.setText(coinData.getCurrentPrice() + " " + upperCurrency);
-            mktCapTop.setText(String.valueOf(coinData.getMarketCap()));
+            mktCapTop.setText(coinData.getMarketCap() + " " + upperCurrency);
             price.setText(coinData.getCurrentPrice() + " " + upperCurrency);
-            marketCap.setText(coinData.getMarketCap() + upperCurrency);
+            marketCap.setText(coinData.getMarketCap() + " " + upperCurrency);
             tradingVol.setText(coinData.getTotalVolume() + " " + upperCurrency);
             mktCapRank.setText(String.valueOf(coinData.getMarketCapRank()));
             allTimeLow.setText(coinData.getAtl() + " " + upperCurrency);
@@ -169,7 +160,7 @@ public class CoinViewController implements Initializable {
             if (coinData.getLow24h() == null || coinData.getHigh24h() == null) {
                 lowHigh24.setText(" - / -");
             } else {
-                lowHigh24.setText(coinData.getLow24h() + " " + upperCurrency + " / " + coinData.getHigh24h() + " " + upperCurrency 
+                lowHigh24.setText(CommonFunctions.formatNumber(coinData.getLow24h()) + " " + upperCurrency + " / " + "\n" + CommonFunctions.formatNumber(coinData.getHigh24h()) + " " + upperCurrency);
             }
         }
     }
@@ -219,6 +210,18 @@ public class CoinViewController implements Initializable {
         Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(secondScene);
         readyScene = false;
+    }
+
+    /**
+     * Oswieża widok, jeśli widok nie był jeszcze załadowany to wywołuje funkcję prepareScene.
+     */
+    public void updateScene() {
+        coinData = APIClient.getTableData(coinId, currency);
+        if (readyScene) {
+            reloadAfterChangingCurrency();
+        } else {
+            prepareScene();
+        }
     }
 
     public void setCurrency(String currency) {

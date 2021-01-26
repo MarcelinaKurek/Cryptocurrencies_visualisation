@@ -5,12 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -18,13 +16,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.controlsfx.control.textfield.TextFields;
 import org.crypto.gui.objects.*;
 import org.crypto.services.APIClient;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.crypto.gui.controllers.CommonFunctions.displayCoin;
 
 public class MainViewController implements Initializable {
     /**
@@ -32,10 +32,8 @@ public class MainViewController implements Initializable {
      */
     @FXML
     private BorderPane borderPane;
-
     @FXML
     private GridPane gridPane;
-
     @FXML
     private TextField textField;
     @FXML
@@ -47,8 +45,6 @@ public class MainViewController implements Initializable {
     private ObservableList<Coin> trendingObservableList;
     private ObservableList<Coin> rankingObservableList;
 
-    private List<Coin> top7Trending;
-    private List<Coin> top7Ranking;
     private Map<String, String> allCoins;
     private List<String> currencies = null;
 
@@ -56,7 +52,6 @@ public class MainViewController implements Initializable {
     private Scene thirdScene;
     private Scene secondScene;
     private String currency;
-    private String coinId;
 
 
     public MainViewController(String currency)  {
@@ -68,7 +63,7 @@ public class MainViewController implements Initializable {
         load();
         textField.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ENTER)) {
-                displayCoin(e, textField.getText());
+                displayCoinView(e, textField.getText());
             }
         });
 
@@ -91,26 +86,29 @@ public class MainViewController implements Initializable {
         List<String> allCoinsNames = new ArrayList<>(allCoins.values());
         TextFields.bindAutoCompletion(textField, allCoinsNames);
 
+        List<String> currenciesUpper = currencies.stream().map(String::toUpperCase).collect(Collectors.toList());
         comboBox = new ComboBox<String>();
         comboBox.getStyleClass().add("combo-box");
         comboBox.setVisibleRowCount(4);
-        comboBox.getItems().addAll(currencies);
-        comboBox.setValue("eur");
+        comboBox.getItems().addAll(currenciesUpper);
+        comboBox.setValue("EUR");
         comboBox.setOnAction(e -> {
-            currency = comboBox.getValue();
+            currency = comboBox.getValue().toLowerCase();
             ranking.setCurrency(currency);
             load();
             updateScene();
         });
-        Button openDialog = new Button("Compare coins");
-        openDialog.getStyleClass().add("button-top");
-        openDialog.setOnAction(this::diplayCompareView);
+
+        Button goToComparison = new Button("Compare coins");
+        goToComparison.getStyleClass().add("button-top");
+        goToComparison.setOnAction(this::displayCompareView);
         Button goToCoinView = new Button("Submit");
         goToCoinView.getStyleClass().add("button-top");
-        goToCoinView.setOnAction(e -> displayCoin(e, textField.getText()));
+        goToCoinView.setOnAction(e -> displayCoinView(e, textField.getText()));
+
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(goToCoinView,openDialog, comboBox);
+        hBox.getChildren().addAll(goToCoinView,goToComparison, comboBox);
         hbox.getChildren().addAll(hBox);
         hbox.setSpacing(150);
     }
@@ -120,8 +118,8 @@ public class MainViewController implements Initializable {
      * w taki sposob, aby można było stworzyć z nich tabelę.
      */
     public void load() {
-        top7Trending = APIClient.getTrending();
-        top7Ranking = APIClient.getTop(currency);
+        List<Coin> top7Trending = APIClient.getTrending();
+        List<Coin> top7Ranking = APIClient.getTop(currency);
         allCoins = APIClient.getCoinList();
         currencies = APIClient.getSupportedCurrencies();
 
@@ -146,26 +144,12 @@ public class MainViewController implements Initializable {
 
     }
 
-    /**
-     * Znajduje id kryptowaluty dla nazwy i otwiera widok
-     * kryptowaluty, jeśli podana nazwa nie istnieje nic się nie dzieje.
-     * @param actionEvent
-     * @param name - nazwa kryptowaluty
-     */
-   public void displayCoin(Event actionEvent, String name) {
-       Stage primaryStage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-       String id = CommonFunctions.findIdByName(allCoins, name);
-       if (!id.equals("")) {
-           coinId = id;
-           coinViewController.setCurrency(currency);
-           coinViewController.setCoinId(coinId);
-           coinViewController.updateScene();
-           primaryStage.setScene(secondScene);
-       }
+   public void displayCoinView(Event actionEvent, String name) {
+       displayCoin(actionEvent, name, allCoins, coinViewController, currency, secondScene);
    }
 
-   private void diplayCompareView(ActionEvent event) {
+   private void displayCompareView(ActionEvent event) {
        Stage primaryStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
        primaryStage.setScene(thirdScene);
    }
@@ -178,20 +162,8 @@ public class MainViewController implements Initializable {
        this.thirdScene = scene;
    }
 
-   public void setCurrency(String currency) {
-        this.currency = currency;
-   }
-
    public void setCoinViewController(CoinViewController coinViewController) {
         this.coinViewController = coinViewController;
-   }
-
-   public String getCurrency() {
-        return currency;
-   }
-
-   public String getCoinId() {
-        return coinId;
    }
 
 }

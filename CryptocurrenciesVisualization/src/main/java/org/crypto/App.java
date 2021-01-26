@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 import org.crypto.gui.controllers.CoinViewController;
 import org.crypto.gui.controllers.CompareCoinsViewController;
 import org.crypto.gui.controllers.MainViewController;
-import org.crypto.gui.plots.Plots;
-import tech.tablesaw.plotly.components.Figure;
 
 import java.util.function.Consumer;
 
