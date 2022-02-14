@@ -13,13 +13,13 @@ brać trzy kryptowaluty jednocześnie.
 Najważniejsze statystyki i funkcje,
 które chcemy zapewnić użytkownikowi to:
 -Wykres ceny na przestrzeni ostatniego dnia, tygodnia, miesiąca lub
-roku.
+roku.  
 -Procentowy stosunek obecnej ceny względem ostatniego dnia, tygo-
-dnia, miesiąca i roku.
+dnia, miesiąca i roku.  
 -Dodatkowe informacje prezentowane w formie tabelki, między innymi
-wolumen obrotu, maksymalna i minimalna historyczna cena.
--Przeliczenie ceny na wybraną przez użytkownika realną walutę.
--Porównywanie kryptowalut między sobą
+wolumen obrotu, maksymalna i minimalna historyczna cena.  
+-Przeliczenie ceny na wybraną przez użytkownika realną walutę.  
+-Porównywanie kryptowalut między sobą  
 
 ## Źródło danych
 API udostępnione przez CoinGecko: https://www.coingecko.com/pl/api
